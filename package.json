@@ -1,0 +1,22 @@
+{
+  "type": "module",
+  "private": true,
+  "workspaces": [
+    "server",
+    "client",
+    "e2e"
+  ],
+  "scripts": {
+    "build:client": "yarn workspace AutoAudit-client build",
+    "dev": "yarn workspace AutoAudit-server dev",
+    "dev:debug": "yarn workspace AutoAudit-server dev:debug",
+    "heroku-postbuild": "yarn workspace AutoAudit-client build",
+    "start": "yarn workspace AutoAudit-server start",
+    "dev:cypress": "yarn workspace AutoAudit-server dev:e2e",
+    "e2e:open": "yarn workspace AutoAudit-e2e e2e:open",
+    "e2e:run": "yarn workspace AutoAudit-e2e e2e:run"
+  },
+  "engines": {
+    "node": "^14.15"
+  }
+}
