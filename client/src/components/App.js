@@ -7,6 +7,9 @@ import "../assets/scss/main.scss";
 import RegistrationForm from "./registration/RegistrationForm";
 import SignInForm from "./authentication/SignInForm";
 import TopBar from "./layout/TopBar";
+import HomePage from "./layout/HomePage.js";
+import ExamList from "./layout/ExamList.js";
+import AccountsReceivableImport from "./layout/AccountsReceivablesImport.js";
 
 const App = (props) => {
   const [currentUser, setCurrentUser] = useState(undefined);
@@ -19,15 +22,19 @@ const App = (props) => {
         setCurrentUser(null);
       });
   }, []);
+
   return (
     <Router>
       <TopBar user={currentUser} />
+
       <Switch>
         <Route exact path="/">
-          <h2>Hello from react</h2>
+          <HomePage user={currentUser} />
         </Route>
         <Route exact path="/users/new" component={RegistrationForm} />
         <Route exact path="/user-sessions/new" component={SignInForm} />
+        <Route exact path="/exams" component={ExamList} />
+        <Route exact path="/exams/importar" component={AccountsReceivableImport} />
       </Switch>
     </Router>
   );

@@ -12,3 +12,24 @@
   -moz-tab-size: 4;
   tab-size: 4;
 }
+
+.government,
+.government:nth-of-type(even),
+.government:nth-of-type(odd) {
+  background-color: rgb(74, 125, 165);
+  font-weight: bolder;
+}
+
+.intercompany,
+.intercompany:nth-of-type(even),
+.intercompany:nth-of-type(odd) {
+  background-color: rgb(146, 255, 109);
+  font-weight: bolder;
+}
+
+.foreign,
+.foreign:nth-of-type(even),
+.foreign:nth-of-type(odd) {
+  background-color: rgb(255, 245, 109);
+  font-weight: bolder;
+}
