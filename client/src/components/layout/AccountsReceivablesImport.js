@@ -7,7 +7,9 @@ import matchupAccountsPayable from "../../services/matchupAccountsPayable.js";
 import findGovernmentAR from "../../services/findGovernmentAR.js";
 import findIntercompanyAR from "../../services/findIntercompanyAR.js";
 import calculateWaterfall from "../../services/calculateWaterFall.js";
+import fieldCleaner from "../../services/fieldCleaner.js";
 import ExamTotals from "./ExamTotals.js";
+import findNBAR from "../../services/findNBAR.js";
 
 const AccountsReceivableImport = (props) => {
   const [customerRecords, setCustomerRecords] = useState([]);
@@ -33,6 +35,7 @@ const AccountsReceivableImport = (props) => {
   const [keywords, setKeywords] = useState({
     government: [],
     intercompany: [],
+    nbar: [],
   });
 
   const importAccountsReceivable = (file) => {
@@ -54,9 +57,7 @@ const AccountsReceivableImport = (props) => {
     });
 
     promise.then((d) => {
-      console.log(d);
       const columnNames = [];
-      console.log(Object.entries(d));
       let id = 1;
       d.forEach((customerRecord) => {
         customerRecord["id"] = id;
@@ -120,24 +121,6 @@ const AccountsReceivableImport = (props) => {
     });
   };
 
-  const fieldCleaner = (customerRecord) => {
-    Object.keys(customerRecord).map(function (key, index) {
-      if (
-        typeof customerRecord[key] != "number" &&
-        typeof customerRecord[key] != "boolean" &&
-        key != "Customer Name"
-      ) {
-        customerRecord[key] = customerRecord[key].replace("$", "");
-        customerRecord[key] = customerRecord[key].trim();
-        customerRecord[key] = customerRecord[key].replace("-", "");
-        if (!customerRecord[key]) {
-          customerRecord[key] = 0;
-        }
-      }
-    });
-    return customerRecord;
-  };
-
   const assignAddresses = async (event) => {
     event.preventDefault();
     let customerListWithAddresses = await matchupAddresses(customerRecords, addressRecords);
@@ -185,6 +168,13 @@ const AccountsReceivableImport = (props) => {
     setCustomerRecords([]);
     setCustomerRecords(customerListWaterfall[0]);
     setExamTotals(customerListWaterfall[1]);
+  };
+
+  const assignNBAR = async (event) => {
+    event.preventDefault();
+    let customerListWithNBAR = await findNBAR(customerRecords, keywords.nbar);
+    setCustomerRecords([]);
+    setCustomerRecords(customerListWithNBAR);
   };
 
   let allTheCustomers = customerRecords.map((customer) => {
@@ -245,6 +235,16 @@ const AccountsReceivableImport = (props) => {
         ></textarea>
       </label>
       <input type="button" value="Match Intercompany Keywords" onClick={assignIntercompany} />
+      <label>
+        NBAR Keywords (separate by ;)
+        <textarea
+          name="nbar"
+          onChange={handleInputChange}
+          value={keywords.nbar}
+          rows="1"
+        ></textarea>
+      </label>
+      <input type="button" value="Match NBAR Keywords" onClick={assignNBAR} />
       <input type="button" value="Calculate Waterfall" onClick={triggerWaterfall} />
       <table className="stacked">
         <thead>
