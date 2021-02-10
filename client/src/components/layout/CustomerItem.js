@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect } from "react";
 
 const CustomerItem = (props) => {
-  const [toggleFields, setToggleFields] = useState({})
+  const [toggleFields, setToggleFields] = useState({});
 
   useEffect(() => {
     setToggleFields({
@@ -9,50 +9,62 @@ const CustomerItem = (props) => {
       Intercompany: props.customer["Intercompany"],
       Foreign: props.customer["Foreign"],
       Government: props.customer["Government"],
-    })
-  }, [])
+      NBAR: props.customer["NBAR"],
+    });
+  }, []);
 
-  let classNameColor
+  let classNameColor;
+  let stateClassName;
 
   const handleClick = (event) => {
-    event.preventDefault()
+    event.preventDefault();
     if (!toggleFields[event.currentTarget.getAttribute("name")]) {
       setToggleFields({
         ...toggleFields,
         [event.currentTarget.getAttribute("name")]: true,
-      })
-      props.customer[event.currentTarget.getAttribute("name")] = true
+      });
+      props.customer[event.currentTarget.getAttribute("name")] = true;
     } else {
       setToggleFields({
         ...toggleFields,
         [event.currentTarget.getAttribute("name")]: false,
-      })
-      props.customer[event.currentTarget.getAttribute("name")] = false
+      });
+      props.customer[event.currentTarget.getAttribute("name")] = false;
     }
-  }
+  };
 
-  let govtDisplay = "No"
+  let govtDisplay = "No";
   if (props.customer["Government"]) {
-    govtDisplay = "Yes"
-    classNameColor = "government"
+    govtDisplay = "Yes";
+    classNameColor = "government";
   }
 
-  let intercompanyDisplay = "No"
+  let intercompanyDisplay = "No";
   if (props.customer["Intercompany"]) {
-    intercompanyDisplay = "Yes"
-    classNameColor = "intercompany"
+    intercompanyDisplay = "Yes";
+    classNameColor = "intercompany";
   }
 
-  let foreignDisplay = "No"
+  let foreignDisplay = "No";
   if (props.customer["Foreign"]) {
-    foreignDisplay = "Yes"
-    classNameColor = "foreign"
+    foreignDisplay = "Yes";
+    classNameColor = "foreign";
+  }
+
+  let NBARDisplay = "No";
+  if (props.customer["NBAR"]) {
+    NBARDisplay = "Yes";
+    classNameColor = "nbar";
+  }
+
+  if (props.customer["Address Score"] || props.customer["State"] == "No State Found") {
+    stateClassName = "warning";
   }
 
   return (
     <tr className={classNameColor}>
       <td>{props.customer["Customer Name"]}</td>
-      <td>{props.customer["State"]}</td>
+      <td className={stateClassName}>{props.customer["State"]}</td>
       <td>${props.customer["Current"]}</td>
       <td>${props.customer["30 Days"]}</td>
       <td>${props.customer["60 Days"]}</td>
@@ -78,14 +90,16 @@ const CustomerItem = (props) => {
         {govtDisplay}
       </td>
       <td>${props.customer["Government Reserve"]}</td>
-      <td>NBAR</td>
+      <td onClick={handleClick} value={props.customer["NBAR"]} name="NBAR">
+        {NBARDisplay}
+      </td>
       <td>{props.customer["NBAR Reserve"]}</td>
       <td>{props.customer["Net Eligible"]}</td>
       <td>{props.customer["Concentration"]}</td>
       <td>{intercompanyDisplay}</td>
       <td>${props.customer["Contra"]}</td>
     </tr>
-  )
-}
+  );
+};
 
-export default CustomerItem
+export default CustomerItem;

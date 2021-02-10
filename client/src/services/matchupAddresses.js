@@ -1,5 +1,8 @@
+import FuzzySet from "fuzzyset.js";
+import fieldCleaner from "../services/fieldCleaner.js";
+
 let matchupAddresses = (customerList, addressList) => {
-  let customerListWithState = []
+  let customerListWithState = [];
   let states = [
     "AK",
     "AL",
@@ -42,7 +45,6 @@ let matchupAddresses = (customerList, addressList) => {
     "OK",
     "OR",
     "PA",
-    "PR",
     "RI",
     "SC",
     "SD",
@@ -56,22 +58,39 @@ let matchupAddresses = (customerList, addressList) => {
     "WI",
     "WV",
     "WY",
-  ]
+  ];
   for (let i = 0; i < customerList.length; i++) {
+    let addressHighScore = 0;
     for (let j = 0; j < addressList.length; j++) {
-      if (customerList[i]["Customer Name"] == addressList[j]["Customer Name"]) {
-        customerList[i]["State"] = addressList[j]["State"]
+      let a = FuzzySet([customerList[i]["Customer Name"]]);
+      if (a.get(addressList[j]["Customer Name"]) != null) {
+        console.log(
+          a.get(addressList[j]["Customer Name"]) + "  AND  " + addressList[j]["Customer Name"]
+        );
+      }
+      if (
+        a.get(addressList[j]["Customer Name"]) &&
+        a.get(addressList[j]["Customer Name"])[0][0] >= 0.7 &&
+        a.get(addressList[j]["Customer Name"])[0][0] > addressHighScore &&
+        addressList[j]["State"] != undefined
+      ) {
+        if (a.get(addressList[j]["Customer Name"])[0][0] < 0.8) {
+          customerList[i]["Address Score"] = "Warning";
+        }
+        addressHighScore = a.get(addressList[j]["Customer Name"])[0][0];
+        customerList[i]["State"] = addressList[j]["State"];
         if (!states.includes(customerList[i]["State"])) {
-          customerList[i]["Foreign"] = true
-          customerList[i]["Foreign Amount"] = customerList[i]["Total"]
+          customerList[i]["Foreign"] = true;
         } else {
-          customerList[i]["Foreign"] = false
-          customerList[i]["Foreign Amount"] = 0
+          customerList[i]["Foreign"] = false;
         }
       }
     }
+    if (!customerList[i]["State"]) {
+      customerList[i]["State"] = "No State Found";
+    }
   }
-  return customerList
-}
+  return customerList;
+};
 
-export default matchupAddresses
+export default matchupAddresses;

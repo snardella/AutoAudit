@@ -33,3 +33,14 @@
   background-color: rgb(255, 245, 109);
   font-weight: bolder;
 }
+
+.nbar,
+.nbar:nth-of-type(even),
+.nbar:nth-of-type(odd) {
+  background-color: rgb(226, 10, 10);
+  font-weight: bolder;
+}
+
+.warning {
+  background-color: rgb(255, 174, 0);
+}
