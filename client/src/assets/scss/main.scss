@@ -41,6 +41,17 @@
   font-weight: bolder;
 }
 
+.contra,
+.contra:nth-of-type(even),
+.contra:nth-of-type(odd) {
+  background-color: rgba(255, 7, 205, 0.783);
+  font-weight: bolder;
+}
+
 .warning {
   background-color: rgb(255, 174, 0);
+}
+
+.pop-up {
+  background-color: yellowgreen;
 }

@@ -13,6 +13,7 @@ const fieldCleaner = (customerRecord) => {
       }
     } else if (key == "Customer Name") {
       customerRecord[key] = customerRecord[key].replace("Subtotal", "");
+      customerRecord[key] = customerRecord[key].trim();
     }
   });
   return customerRecord;
