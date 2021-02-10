@@ -2,6 +2,10 @@ import React, { useState, useEffect } from "react";
 
 const CustomerItem = (props) => {
   const [toggleFields, setToggleFields] = useState({});
+  const [isShown, setIsShown] = useState({
+    Address: false,
+    "Contra Reserve": false,
+  });
 
   useEffect(() => {
     setToggleFields({
@@ -10,11 +14,13 @@ const CustomerItem = (props) => {
       Foreign: props.customer["Foreign"],
       Government: props.customer["Government"],
       NBAR: props.customer["NBAR"],
+      Contra: props.customer["Contra"],
     });
   }, []);
 
   let classNameColor;
   let stateClassName;
+  let apClassName;
 
   const handleClick = (event) => {
     event.preventDefault();
@@ -57,14 +63,46 @@ const CustomerItem = (props) => {
     classNameColor = "nbar";
   }
 
+  let contraDisplay = "No";
+  if (props.customer["Contra"]) {
+    contraDisplay = "Yes";
+    classNameColor = "contra";
+  } else {
+    props.customer["Contra Reserve"] = 0;
+  }
+
   if (props.customer["Address Score"] || props.customer["State"] == "No State Found") {
     stateClassName = "warning";
+  }
+
+  if (props.customer["AP Score"] == "Warning") {
+    apClassName = "warning";
   }
 
   return (
     <tr className={classNameColor}>
       <td>{props.customer["Customer Name"]}</td>
-      <td className={stateClassName}>{props.customer["State"]}</td>
+      <td
+        onMouseEnter={(event) =>
+          setIsShown({
+            ...isShown,
+            [event.currentTarget.getAttribute("name")]: true,
+          })
+        }
+        onMouseLeave={(event) =>
+          setIsShown({
+            ...isShown,
+            [event.currentTarget.getAttribute("name")]: false,
+          })
+        }
+        className={stateClassName}
+        name="Address"
+      >
+        {props.customer["State"]}
+      </td>
+      {isShown["Address"] && props.customer["Address Source"] && (
+        <div className="pop-up">{props.customer["Address Source"]}</div>
+      )}
       <td>${props.customer["Current"]}</td>
       <td>${props.customer["30 Days"]}</td>
       <td>${props.customer["60 Days"]}</td>
@@ -84,8 +122,31 @@ const CustomerItem = (props) => {
         {foreignDisplay}
       </td>
       <td>${props.customer["Foreign Reserve"]}</td>
-      <td>{props.customer["Contra"]}</td>
-      <td>${props.customer["Contra Reserve"]}</td>
+      <td onClick={handleClick} value={props.customer["Contra"]} name="Contra">
+        {contraDisplay}
+      </td>
+      <td
+        onMouseEnter={(event) =>
+          setIsShown({
+            ...isShown,
+            [event.currentTarget.getAttribute("name")]: true,
+          })
+        }
+        onMouseLeave={(event) =>
+          setIsShown({
+            ...isShown,
+            [event.currentTarget.getAttribute("name")]: false,
+          })
+        }
+        className={apClassName}
+        name="Contra Reserve"
+      >
+        {props.customer["Contra Reserve"]}
+      </td>
+      {isShown["Contra Reserve"] && props.customer["Accounts Payable Source"] && (
+        <td className="pop-up">{props.customer["Accounts Payable Source"]}</td>
+      )}
+
       <td onClick={handleClick} value={props.customer["Government"]} name="Government">
         {govtDisplay}
       </td>

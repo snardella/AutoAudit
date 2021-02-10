@@ -1,9 +1,7 @@
 import FuzzySet from "fuzzyset.js";
-import fieldCleaner from "../services/fieldCleaner.js";
 
 let matchupAddresses = (customerList, addressList) => {
-  let customerListWithState = [];
-  let states = [
+  const states = [
     "AK",
     "AL",
     "AR",
@@ -65,7 +63,7 @@ let matchupAddresses = (customerList, addressList) => {
       let a = FuzzySet([customerList[i]["Customer Name"]]);
       if (a.get(addressList[j]["Customer Name"]) != null) {
         console.log(
-          a.get(addressList[j]["Customer Name"]) + "  AND  " + addressList[j]["Customer Name"]
+          a.get(addressList[j]["Customer Name"]) + "--AND--" + addressList[j]["Customer Name"]
         );
       }
       if (
@@ -76,9 +74,14 @@ let matchupAddresses = (customerList, addressList) => {
       ) {
         if (a.get(addressList[j]["Customer Name"])[0][0] < 0.8) {
           customerList[i]["Address Score"] = "Warning";
+        } else {
+          customerList[i]["Address Score"] = "";
         }
         addressHighScore = a.get(addressList[j]["Customer Name"])[0][0];
         customerList[i]["State"] = addressList[j]["State"];
+        customerList[i][
+          "Address Source"
+        ] = `The imported spreadsheet record we pulled from is: ${addressList[j]["Customer Name"]}`;
         if (!states.includes(customerList[i]["State"])) {
           customerList[i]["Foreign"] = true;
         } else {

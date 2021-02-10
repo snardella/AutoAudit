@@ -87,9 +87,7 @@ const AccountsReceivableImport = (props) => {
     });
 
     promise.then((d) => {
-      console.log(d);
       const columnNames = [];
-      console.log(Object.entries(d));
       setAddressRecords(d);
     });
   };
@@ -113,10 +111,7 @@ const AccountsReceivableImport = (props) => {
     });
 
     promise.then((d) => {
-      console.log(d);
       const columnNames = [];
-      console.log(Object.entries(d));
-
       setAccountsPayableRecords(d);
     });
   };
