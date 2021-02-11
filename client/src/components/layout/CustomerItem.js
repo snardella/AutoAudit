@@ -49,18 +49,24 @@ const CustomerItem = (props) => {
   if (props.customer["Intercompany"]) {
     intercompanyDisplay = "Yes";
     classNameColor = "intercompany";
+  } else {
+    props.customer["Intercompany Reserve"] = 0;
   }
 
   let foreignDisplay = "No";
   if (props.customer["Foreign"]) {
     foreignDisplay = "Yes";
     classNameColor = "foreign";
+  } else {
+    props.customer["Foreign Reserve"] = 0;
   }
 
   let NBARDisplay = "No";
   if (props.customer["NBAR"]) {
     NBARDisplay = "Yes";
     classNameColor = "nbar";
+  } else {
+    props.customer["NBAR Reserve"] = 0;
   }
 
   let contraDisplay = "No";
@@ -157,8 +163,6 @@ const CustomerItem = (props) => {
       <td>{props.customer["NBAR Reserve"]}</td>
       <td>{props.customer["Net Eligible"]}</td>
       <td>{props.customer["Concentration"]}</td>
-      <td>{intercompanyDisplay}</td>
-      <td>${props.customer["Contra"]}</td>
     </tr>
   );
 };

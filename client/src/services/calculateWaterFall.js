@@ -58,7 +58,6 @@ const calculateWaterfall = (customerAccountsReceivables) => {
       cAR["Intercompany Reserve"] = cAR["Net Eligible"];
       cAR["Net Eligible"] = 0;
     }
-
     if (cAR["Foreign"]) {
       cAR["Foreign Reserve"] = cAR["Net Eligible"];
       cAR["Net Eligible"] = 0;
