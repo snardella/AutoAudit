@@ -57,13 +57,13 @@
 }
 
 .table {
-  height: 400px;
+  height: 300px;
   overflow: auto;
 }
 
 .tableFixHead {
   overflow-y: auto;
-  height: 800px;
+  height: 300px;
 }
 .tableFixHead thead th {
   position: sticky;
@@ -78,6 +78,11 @@ td {
   padding: 8px 16px;
   border: 1px solid #ccc;
 }
-th {
-  background: rgb(103, 248, 147);
+
+#exam-lines {
+  background-color: rgb(186, 252, 71);
+}
+
+#exam-total {
+  background-color: darkolivegreen;
 }

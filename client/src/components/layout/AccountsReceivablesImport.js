@@ -10,10 +10,12 @@ import calculateWaterfall from "../../services/calculateWaterFall.js";
 import fieldCleaner from "../../services/fieldCleaner.js";
 import ExamTotals from "./ExamTotals.js";
 import findNBAR from "../../services/findNBAR.js";
+import translateServerErrors from "../services/translateServerErrors.js";
 
 const AccountsReceivableImport = (props) => {
   const [customerRecords, setCustomerRecords] = useState([]);
   const [examTotals, setExamTotals] = useState({
+    examineeName: "",
     examNetEligible: 0,
     examCurrent: 0,
     exam30Days: 0,
@@ -37,6 +39,22 @@ const AccountsReceivableImport = (props) => {
     intercompany: [],
     nbar: [],
   });
+  const [examDate, setExamDate] = useState(() => {
+    let date = new Date();
+    date =
+      date.getFullYear().toString() +
+      "-" +
+      (date.getMonth() + 1).toString().padStart(2, 0) +
+      "-" +
+      date.getDate().toString().padStart(2, 0);
+    return date;
+  });
+  const [errors, setErrors] = useState([]);
+  const [shouldRedirect, setShouldRedirect] = useState(false);
+
+  if (shouldRedirect) {
+    return <Redirect to="/exams" />;
+  }
 
   const importAccountsReceivable = (file) => {
     const promise = new Promise((resolve, reject) => {
@@ -116,6 +134,33 @@ const AccountsReceivableImport = (props) => {
     });
   };
 
+  const postAccountsReceivable = (customerRecords, examTotals, examDate) => {
+    try {
+      const response = await fetch('/api/v1/exams', {
+        method: "POST",
+        headers: new Headers({
+          "Content-Type": "application/json",
+        }),
+        body: JSON.stringify(customerRecords, examTotals, examDate)
+      })
+      if (!response.ok) {
+        if (response.status === 422) {
+          const body = await response.json()
+          const newErrors = translateServerErrors(body.errors)
+          return setErrors(newErrors)
+        } else {
+          const errorMessage = `${response.status} (${response.statusText})`
+          const error = new Error(errorMessage)
+          throw error
+        }
+      } else {
+        setShouldRedirect(true)
+      }
+    } catch (error) {
+      console.error(`Error in fetch: ${error.message}`)
+    }
+  };
+
   const assignAddresses = async (event) => {
     event.preventDefault();
     let customerListWithAddresses = await matchupAddresses(customerRecords, addressRecords);
@@ -157,6 +202,22 @@ const AccountsReceivableImport = (props) => {
     });
   };
 
+  const handleExamineeChange = (event) => {
+    setExamTotals({
+      ...examTotals,
+      [event.currentTarget.name]: event.currentTarget.value,
+    });
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    postAccountsReceivable(customerRecords, examTotals, examDate);
+  };
+
+  const handleDateChange = (event) => {
+    setExamDate(event.currentTarget.value);
+  };
+
   const triggerWaterfall = async (event) => {
     event.preventDefault();
     let customerListWaterfall = await calculateWaterfall(customerRecords);
@@ -178,6 +239,26 @@ const AccountsReceivableImport = (props) => {
 
   return (
     <div>
+      <label>
+        Examinee Name:
+        <input
+          type="text"
+          id="examinee-name"
+          name="examineeName"
+          value={examTotals.examineeName}
+          onChange={handleExamineeChange}
+        />
+      </label>
+      <label htmlFor="start">
+        Exam Date:
+        <input
+          type="date"
+          id="start"
+          name="trip-start"
+          value={examDate}
+          onChange={handleDateChange}
+        ></input>
+      </label>
       <label>
         Customer A/R:
         <input
@@ -243,7 +324,7 @@ const AccountsReceivableImport = (props) => {
       <input type="button" value="Calculate Waterfall" onClick={triggerWaterfall} />
       <div className="tableFixHead">
         <table className="stacked">
-          <thead>
+          <thead id="exam-lines">
             <tr>
               <th width="200">Customer Name</th>
               <th width="200">State</th>
@@ -277,7 +358,7 @@ const AccountsReceivableImport = (props) => {
       </div>
       <div>
         <table className="stacked">
-          <thead>
+          <thead id="exam-total">
             <tr>
               <th width="200">Net Eligible</th>
               <th width="200">Current</th>
@@ -300,6 +381,7 @@ const AccountsReceivableImport = (props) => {
             <ExamTotals examTotals={examTotals} />
           </tbody>
         </table>
+        <input type="button" value="Submit Accounts Receivable" onClick={handleSubmit} />
       </div>
     </div>
   );
