@@ -241,63 +241,66 @@ const AccountsReceivableImport = (props) => {
       </label>
       <input type="button" value="Match NBAR Keywords" onClick={assignNBAR} />
       <input type="button" value="Calculate Waterfall" onClick={triggerWaterfall} />
-      <table className="stacked">
-        <thead>
-          <tr>
-            <th width="200">Net Eligible</th>
-            <th width="200">Current</th>
-            <th width="200">30 Days</th>
-            <th width="200">60 Days</th>
-            <th width="200">90 Days</th>
-            <th width="200">120 Days</th>
-            <th width="200">Total</th>
-            <th width="200">Greater than 90 Days</th>
-            <th width="200">Cross Aging Reserve</th>
-            <th width="200">Aged Credits Reserve</th>
-            <th width="200">Intercompany Reserve</th>
-            <th width="200">Foreign Reserve</th>
-            <th width="200">Contra Reserve</th>
-            <th width="200">Government Reserve</th>
-            <th width="200">NBAR Reserve</th>
-          </tr>
-        </thead>
-        <tbody>
-          <ExamTotals examTotals={examTotals} />
-        </tbody>
-      </table>
-      <table className="stacked">
-        <thead>
-          <tr>
-            <th width="200">Customer Name</th>
-            <th width="200">State</th>
-            <th width="200">Current</th>
-            <th width="200">30 Days</th>
-            <th width="200">60 Days</th>
-            <th width="200">90 Days</th>
-            <th width="200">120 Days</th>
-            <th width="200">Total</th>
-            <th width="200">Greater than 90 Days</th>
-            <th width="200">Cross Aging %</th>
-            <th width="200">Cross Aging Reserve</th>
-            <th width="200">Aged Credits</th>
-            <th width="200">Aged Credits Reserve</th>
-            <th width="200">Intercompany</th>
-            <th width="200">Intercompany Reserve</th>
-            <th width="200">Foreign</th>
-            <th width="200">Foreign Reserve</th>
-            <th width="200">Contra</th>
-            <th width="200">Contra Reserve</th>
-            <th width="200">Government</th>
-            <th width="200">Government Reserve</th>
-            <th width="200">NBAR</th>
-            <th width="200">NBAR Reserve</th>
-            <th width="200">Net Eligible</th>
-            <th width="200">Concentration Reserve</th>
-            <th width="200">Contra</th>
-          </tr>
-        </thead>
-        <tbody>{allTheCustomers}</tbody>
-      </table>
+      <div className="tableFixHead">
+        <table className="stacked">
+          <thead>
+            <tr>
+              <th width="200">Customer Name</th>
+              <th width="200">State</th>
+              <th width="200">Current</th>
+              <th width="200">30 Days</th>
+              <th width="200">60 Days</th>
+              <th width="200">90 Days</th>
+              <th width="200">120 Days</th>
+              <th width="200">Total</th>
+              <th width="200">Greater than 90 Days</th>
+              <th width="200">Cross Aging %</th>
+              <th width="200">Cross Aging Reserve</th>
+              <th width="200">Aged Credits</th>
+              <th width="200">Aged Credits Reserve</th>
+              <th width="200">Intercompany</th>
+              <th width="200">Intercompany Reserve</th>
+              <th width="200">Foreign</th>
+              <th width="200">Foreign Reserve</th>
+              <th width="200">Contra</th>
+              <th width="200">Contra Reserve</th>
+              <th width="200">Government</th>
+              <th width="200">Government Reserve</th>
+              <th width="200">NBAR</th>
+              <th width="200">NBAR Reserve</th>
+              <th width="200">Net Eligible</th>
+              <th width="200">Concentration Reserve</th>
+            </tr>
+          </thead>
+          <tbody>{allTheCustomers}</tbody>
+        </table>
+      </div>
+      <div>
+        <table className="stacked">
+          <thead>
+            <tr>
+              <th width="200">Net Eligible</th>
+              <th width="200">Current</th>
+              <th width="200">30 Days</th>
+              <th width="200">60 Days</th>
+              <th width="200">90 Days</th>
+              <th width="200">120 Days</th>
+              <th width="200">Total</th>
+              <th width="200">Greater than 90 Days</th>
+              <th width="200">Cross Aging Reserve</th>
+              <th width="200">Aged Credits Reserve</th>
+              <th width="200">Intercompany Reserve</th>
+              <th width="200">Foreign Reserve</th>
+              <th width="200">Contra Reserve</th>
+              <th width="200">Government Reserve</th>
+              <th width="200">NBAR Reserve</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ExamTotals examTotals={examTotals} />
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
