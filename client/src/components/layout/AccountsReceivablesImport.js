@@ -10,7 +10,7 @@ import calculateWaterfall from "../../services/calculateWaterFall.js";
 import fieldCleaner from "../../services/fieldCleaner.js";
 import ExamTotals from "./ExamTotals.js";
 import findNBAR from "../../services/findNBAR.js";
-import translateServerErrors from "../services/translateServerErrors.js";
+import translateServerErrors from "../../services/translateServerErrors.js";
 
 const AccountsReceivableImport = (props) => {
   const [customerRecords, setCustomerRecords] = useState([]);
@@ -134,30 +134,30 @@ const AccountsReceivableImport = (props) => {
     });
   };
 
-  const postAccountsReceivable = (customerRecords, examTotals, examDate) => {
+  const postAccountsReceivable = async (customerRecords, examTotals, examDate) => {
     try {
-      const response = await fetch('/api/v1/exams', {
+      const response = await fetch("/api/v1/exams", {
         method: "POST",
         headers: new Headers({
           "Content-Type": "application/json",
         }),
-        body: JSON.stringify(customerRecords, examTotals, examDate)
-      })
+        body: JSON.stringify(customerRecords, examTotals, examDate),
+      });
       if (!response.ok) {
         if (response.status === 422) {
-          const body = await response.json()
-          const newErrors = translateServerErrors(body.errors)
-          return setErrors(newErrors)
+          const body = await response.json();
+          const newErrors = translateServerErrors(body.errors);
+          return setErrors(newErrors);
         } else {
-          const errorMessage = `${response.status} (${response.statusText})`
-          const error = new Error(errorMessage)
-          throw error
+          const errorMessage = `${response.status} (${response.statusText})`;
+          const error = new Error(errorMessage);
+          throw error;
         }
       } else {
-        setShouldRedirect(true)
+        setShouldRedirect(true);
       }
     } catch (error) {
-      console.error(`Error in fetch: ${error.message}`)
+      console.error(`Error in fetch: ${error.message}`);
     }
   };
 

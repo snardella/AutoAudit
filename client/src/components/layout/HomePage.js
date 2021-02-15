@@ -14,6 +14,9 @@ const HomePage = (props) => {
       <Link to="/exams/importar">
         <h2>Import AR</h2>
       </Link>
+      <Link to="/examinees">
+        <h2>Examinees</h2>
+      </Link>
     </div>
   );
 };

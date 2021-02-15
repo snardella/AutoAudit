@@ -3,7 +3,7 @@ const uniqueFactory = require("objection-unique");
 
 const unique = uniqueFactory({
   fields: ["examName"],
-  identifiers: ["id"],
+  identifiers: ["examId"],
 });
 
 class Exam extends unique(Model) {
@@ -18,14 +18,14 @@ class Exam extends unique(Model) {
         modelClass: Examinee,
         join: {
           from: "exams.examineeId",
-          to: "examinees.id",
+          to: "examinees.examineeId",
         },
       },
       accountsReceivables: {
         relation: Model.HasManyRelation,
         modelClass: AccountsReceivable,
         join: {
-          from: "exams.id",
+          from: "exams.examId",
           to: "accountsReceivables.examId",
         },
       },

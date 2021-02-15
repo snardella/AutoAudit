@@ -1,14 +1,17 @@
 const Model = require("./Model");
-const uniqueFactor = require("objection-unique");
+const uniqueFactory = require("objection-unique");
 
 const unique = uniqueFactory({
   fields: ["examineeName"],
-  identifiers: ["id"],
+  identifiers: ["examineeId"],
 });
 
 class Examinee extends unique(Model) {
   static get tableName() {
     return "examinees";
+  }
+  static get idColumn() {
+    return "examineeId";
   }
   static get relationMappings() {
     const { Exam } = require("./index.js");
@@ -17,7 +20,7 @@ class Examinee extends unique(Model) {
         relation: Model.HasManyRelation,
         modelClass: Exam,
         join: {
-          from: "examinees.id",
+          from: "examinees.examineeId",
           to: "exams.examineesId",
         },
       },
@@ -31,3 +34,5 @@ class Examinee extends unique(Model) {
     };
   }
 }
+
+module.exports = Examinee;

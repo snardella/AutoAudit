@@ -10,6 +10,7 @@ import TopBar from "./layout/TopBar";
 import HomePage from "./layout/HomePage.js";
 import ExamList from "./layout/ExamList.js";
 import AccountsReceivableImport from "./layout/AccountsReceivablesImport.js";
+import ExamineesList from "./layout/ExamineesList.js";
 
 const App = (props) => {
   const [currentUser, setCurrentUser] = useState(undefined);
@@ -35,6 +36,7 @@ const App = (props) => {
         <Route exact path="/user-sessions/new" component={SignInForm} />
         <Route exact path="/exams" component={ExamList} />
         <Route exact path="/exams/importar" component={AccountsReceivableImport} />
+        <Route exact path="/examinees" component={ExamineesList} />
       </Switch>
     </Router>
   );

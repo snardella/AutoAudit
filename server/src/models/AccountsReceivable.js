@@ -3,7 +3,7 @@ const uniqueFactory = require("objection-unique");
 
 const unique = uniqueFactory({
   fields: ["customerName"],
-  identifiers: ["id"],
+  identifiers: ["accountsReceivableId"],
 });
 
 class AccountsReceivable extends unique(Model) {
@@ -18,7 +18,7 @@ class AccountsReceivable extends unique(Model) {
         modelClass: Exam,
         join: {
           from: "accountsReceivables.examId",
-          to: "exams.id",
+          to: "exams.examId",
         },
       },
     };
@@ -31,3 +31,5 @@ class AccountsReceivable extends unique(Model) {
     };
   }
 }
+
+module.exports = AccountsReceivable;
