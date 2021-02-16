@@ -8,7 +8,6 @@
 exports.up = async (knex) => {
   return knex.schema.createTable("exams", (table) => {
     table.bigIncrements("examId").primary();
-    table.string("examName").notNullable();
     table.date("examDate").notNullable();
     table.float("examNetEligible").notNullable();
     table.float("examCurrent").notNullable();
@@ -23,6 +22,7 @@ exports.up = async (knex) => {
     table.float("examIntercompanyReserve").notNullable();
     table.float("examForeignReserve").notNullable();
     table.float("examContraReserve").notNullable();
+    table.float("examGovernmentReserve").notNullable();
     table.float("examNBARReserve").notNullable();
     table
       .bigInteger("examineeId")

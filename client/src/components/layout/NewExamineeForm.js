@@ -11,36 +11,9 @@ const NewExamineeForm = (props) => {
   const [errors, setErrors] = useState([]);
   const [shouldRedirect, setShouldRedirect] = useState(false);
 
-  const postExaminee = async (newExamineeData) => {
-    try {
-      const response = await fetch(`/api/v1/examinees`, {
-        method: "POST",
-        headers: new Headers({
-          "Content-Type": "application/json",
-        }),
-        body: JSON.stringify(newExamineeData),
-      });
-      if (!response.ok) {
-        if ((response.status = 422)) {
-          const body = await response.json();
-          const newErrors = translateServerErrors(body.errors);
-          return setErrors(newErrors);
-        } else {
-          const errorMessage = `${response.status} (${response.statusText})`;
-          const error = new Error(errorMessage);
-          throw error;
-        }
-      } else {
-        setShouldRedirect(true);
-      }
-    } catch (error) {
-      console.error(`Error in fetch: ${error.message}`);
-    }
-  };
-
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    postExaminee(newExaminee);
+    await props.postExaminee(newExaminee);
     clearForm();
   };
 
@@ -58,10 +31,6 @@ const NewExamineeForm = (props) => {
     });
   };
 
-  if (shouldRedirect) {
-    return <Redirect to={`/examinees/`} />;
-  }
-
   return (
     <div className="callout">
       <h1>Add Examinee</h1>
@@ -76,7 +45,7 @@ const NewExamineeForm = (props) => {
               onChange={handleInputChange}
               value={newExaminee.examineeName}
             />
-            <FormError error={errors.examineeName} />
+            <FormError error={errors["Examinee Name"]} />
           </label>
           <label className="medium-6 columns">
             Industry Type:
@@ -86,7 +55,7 @@ const NewExamineeForm = (props) => {
               onChange={handleInputChange}
               value={newExaminee.industryType}
             />
-            <FormError error={errors.industryType} />
+            <FormError error={errors["Industry Type"]} />
           </label>
           <div className="button-group">
             <input className="button" type="submit" value="Submit" />

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Redirect } from "react-router-dom";
 import * as XLSX from "xlsx";
 
 import CustomerItem from "./CustomerItem.js";
@@ -15,7 +16,6 @@ import translateServerErrors from "../../services/translateServerErrors.js";
 const AccountsReceivableImport = (props) => {
   const [customerRecords, setCustomerRecords] = useState([]);
   const [examTotals, setExamTotals] = useState({
-    examineeName: "",
     examNetEligible: 0,
     examCurrent: 0,
     exam30Days: 0,
@@ -32,6 +32,7 @@ const AccountsReceivableImport = (props) => {
     examGovernmentReserve: 0,
     examNBARReserve: 0,
   });
+  const [exam, setExam] = useState([]);
   const [addressRecords, setAddressRecords] = useState([]);
   const [accountsPayableRecords, setAccountsPayableRecords] = useState([]);
   const [keywords, setKeywords] = useState({
@@ -39,22 +40,30 @@ const AccountsReceivableImport = (props) => {
     intercompany: [],
     nbar: [],
   });
-  const [examDate, setExamDate] = useState(() => {
-    let date = new Date();
-    date =
-      date.getFullYear().toString() +
-      "-" +
-      (date.getMonth() + 1).toString().padStart(2, 0) +
-      "-" +
-      date.getDate().toString().padStart(2, 0);
-    return date;
-  });
+  const [examinee, setExaminee] = useState({ examineeName: "", industryType: "" });
   const [errors, setErrors] = useState([]);
   const [shouldRedirect, setShouldRedirect] = useState(false);
 
-  if (shouldRedirect) {
-    return <Redirect to="/exams" />;
-  }
+  const getExam = async () => {
+    const examId = props.match.params.examId;
+    try {
+      const response = await fetch(`/api/v1/exams/${examId}`);
+      if (!response.ok) {
+        const errorMessage = `${response.status} (${response.statusText})`;
+        const error = new Error(errorMessage);
+        throw error;
+      }
+      const body = await response.json();
+      setExaminee(body.exam.examinee);
+      setExam(body.exam);
+    } catch (error) {
+      console.error(`Error in fetch: ${error.message}`);
+    }
+  };
+
+  useEffect(() => {
+    getExam();
+  }, []);
 
   const importAccountsReceivable = (file) => {
     const promise = new Promise((resolve, reject) => {
@@ -134,14 +143,16 @@ const AccountsReceivableImport = (props) => {
     });
   };
 
-  const postAccountsReceivable = async (customerRecords, examTotals, examDate) => {
+  const postAccountsReceivable = async (customerRecords, examTotals) => {
     try {
-      const response = await fetch("/api/v1/exams", {
+      const examId = exam.examId;
+      customerRecords[customerRecords.length] = examTotals;
+      const response = await fetch(`/api/v1/exams/${examId}`, {
         method: "POST",
         headers: new Headers({
           "Content-Type": "application/json",
         }),
-        body: JSON.stringify(customerRecords, examTotals, examDate),
+        body: JSON.stringify(customerRecords, examTotals),
       });
       if (!response.ok) {
         if (response.status === 422) {
@@ -202,20 +213,9 @@ const AccountsReceivableImport = (props) => {
     });
   };
 
-  const handleExamineeChange = (event) => {
-    setExamTotals({
-      ...examTotals,
-      [event.currentTarget.name]: event.currentTarget.value,
-    });
-  };
-
   const handleSubmit = (event) => {
     event.preventDefault();
-    postAccountsReceivable(customerRecords, examTotals, examDate);
-  };
-
-  const handleDateChange = (event) => {
-    setExamDate(event.currentTarget.value);
+    postAccountsReceivable(customerRecords, examTotals);
   };
 
   const triggerWaterfall = async (event) => {
@@ -233,32 +233,23 @@ const AccountsReceivableImport = (props) => {
     setCustomerRecords(customerListWithNBAR);
   };
 
+  let dateDisplay = new Date(exam.examDate);
+  dateDisplay = `${
+    dateDisplay.getMonth() + 1
+  }/${dateDisplay.getDate()}/${dateDisplay.getFullYear()}`;
+
   let allTheCustomers = customerRecords.map((customer) => {
     return <CustomerItem key={customer["id"]} customer={customer} />;
   });
 
+  if (shouldRedirect) {
+    return <Redirect to={`/exams/${exam.examId}`} />;
+  }
+
   return (
     <div>
-      <label>
-        Examinee Name:
-        <input
-          type="text"
-          id="examinee-name"
-          name="examineeName"
-          value={examTotals.examineeName}
-          onChange={handleExamineeChange}
-        />
-      </label>
-      <label htmlFor="start">
-        Exam Date:
-        <input
-          type="date"
-          id="start"
-          name="trip-start"
-          value={examDate}
-          onChange={handleDateChange}
-        ></input>
-      </label>
+      <h1>Examinee Name: {examinee.examineeName}</h1>
+      <h2>Exam Date: {dateDisplay}</h2>
       <label>
         Customer A/R:
         <input
@@ -322,10 +313,37 @@ const AccountsReceivableImport = (props) => {
       </label>
       <input type="button" value="Match NBAR Keywords" onClick={assignNBAR} />
       <input type="button" value="Calculate Waterfall" onClick={triggerWaterfall} />
-      <div className="tableFixHead">
+      <div>
         <table className="stacked">
-          <thead id="exam-lines">
+          <thead id="exam-total">
             <tr>
+              <th width="200">Net Eligible</th>
+              <th width="200">Current</th>
+              <th width="200">30 Days</th>
+              <th width="200">60 Days</th>
+              <th width="200">90 Days</th>
+              <th width="200">120 Days</th>
+              <th width="200">Total</th>
+              <th width="200">Greater than 90 Days</th>
+              <th width="200">Cross Aging Reserve</th>
+              <th width="200">Aged Credits Reserve</th>
+              <th width="200">Intercompany Reserve</th>
+              <th width="200">Foreign Reserve</th>
+              <th width="200">Contra Reserve</th>
+              <th width="200">Government Reserve</th>
+              <th width="200">NBAR Reserve</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ExamTotals examTotals={examTotals} />
+          </tbody>
+        </table>
+        <input type="button" value="Submit Accounts Receivable" onClick={handleSubmit} />
+      </div>
+      <div>
+        <table className="fixed_header">
+          <thead id="exam-lines">
+            <tr className="content">
               <th width="200">Customer Name</th>
               <th width="200">State</th>
               <th width="200">Current</th>
@@ -355,33 +373,6 @@ const AccountsReceivableImport = (props) => {
           </thead>
           <tbody>{allTheCustomers}</tbody>
         </table>
-      </div>
-      <div>
-        <table className="stacked">
-          <thead id="exam-total">
-            <tr>
-              <th width="200">Net Eligible</th>
-              <th width="200">Current</th>
-              <th width="200">30 Days</th>
-              <th width="200">60 Days</th>
-              <th width="200">90 Days</th>
-              <th width="200">120 Days</th>
-              <th width="200">Total</th>
-              <th width="200">Greater than 90 Days</th>
-              <th width="200">Cross Aging Reserve</th>
-              <th width="200">Aged Credits Reserve</th>
-              <th width="200">Intercompany Reserve</th>
-              <th width="200">Foreign Reserve</th>
-              <th width="200">Contra Reserve</th>
-              <th width="200">Government Reserve</th>
-              <th width="200">NBAR Reserve</th>
-            </tr>
-          </thead>
-          <tbody>
-            <ExamTotals examTotals={examTotals} />
-          </tbody>
-        </table>
-        <input type="button" value="Submit Accounts Receivable" onClick={handleSubmit} />
       </div>
     </div>
   );

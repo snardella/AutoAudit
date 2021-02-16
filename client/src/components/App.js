@@ -11,6 +11,8 @@ import HomePage from "./layout/HomePage.js";
 import ExamList from "./layout/ExamList.js";
 import AccountsReceivableImport from "./layout/AccountsReceivablesImport.js";
 import ExamineesList from "./layout/ExamineesList.js";
+import ExamineeShow from "./layout/ExamineeShow.js";
+import ExamShow from "./layout/ExamShow.js";
 
 const App = (props) => {
   const [currentUser, setCurrentUser] = useState(undefined);
@@ -34,9 +36,10 @@ const App = (props) => {
         </Route>
         <Route exact path="/users/new" component={RegistrationForm} />
         <Route exact path="/user-sessions/new" component={SignInForm} />
-        <Route exact path="/exams" component={ExamList} />
-        <Route exact path="/exams/importar" component={AccountsReceivableImport} />
         <Route exact path="/examinees" component={ExamineesList} />
+        <Route exact path="/examinees/:examineeId" component={ExamineeShow} />
+        <Route exact path="/exams/:examId" component={ExamShow} />
+        <Route exact path="/importar/:examId" component={AccountsReceivableImport} />
       </Switch>
     </Router>
   );

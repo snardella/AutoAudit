@@ -24,6 +24,7 @@ exports.up = async (knex) => {
     table.float("customerIntercompanyReserve").notNullable();
     table.float("customerForeignReserve").notNullable();
     table.float("customerContraReserve").notNullable();
+    table.float("customerGovernmentReserve").notNullable();
     table.float("customerNBARReserve").notNullable();
     table.float("customerConcentration").notNullable();
     table.bigInteger("examId").notNullable().index().unsigned().references("exams.examId");

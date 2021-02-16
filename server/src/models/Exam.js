@@ -1,14 +1,17 @@
 const Model = require("./Model");
 const uniqueFactory = require("objection-unique");
 
-const unique = uniqueFactory({
-  fields: ["examName"],
+/* const unique = uniqueFactory({
+  fields: ["examId"],
   identifiers: ["examId"],
-});
+}); */
 
-class Exam extends unique(Model) {
+class Exam extends Model {
   static get tableName() {
     return "exams";
+  }
+  static get idColumn() {
+    return ["examId"];
   }
   static get relationMappings() {
     const { Examinee, AccountsReceivable } = require("./index");
@@ -34,7 +37,7 @@ class Exam extends unique(Model) {
   static get jsonSchema() {
     return {
       type: "object",
-      required: ["examName", "examDate"],
+      required: ["examDate"],
       examName: { type: "string" },
       examDate: { type: ["date", "string"] },
     };

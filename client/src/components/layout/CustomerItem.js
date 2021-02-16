@@ -107,7 +107,7 @@ const CustomerItem = (props) => {
         {props.customer["State"]}
       </td>
       {isShown["Address"] && props.customer["Address Source"] && (
-        <div className="pop-up">{props.customer["Address Source"]}</div>
+        <td className="pop-up">{props.customer["Address Source"]}</td>
       )}
       <td>${props.customer["Current"]}</td>
       <td>${props.customer["30 Days"]}</td>
@@ -147,7 +147,7 @@ const CustomerItem = (props) => {
         className={apClassName}
         name="Contra Reserve"
       >
-        {props.customer["Contra Reserve"]}
+        ${props.customer["Contra Reserve"]}
       </td>
       {isShown["Contra Reserve"] && props.customer["Accounts Payable Source"] && (
         <td className="pop-up">{props.customer["Accounts Payable Source"]}</td>
@@ -160,8 +160,8 @@ const CustomerItem = (props) => {
       <td onClick={handleClick} value={props.customer["NBAR"]} name="NBAR">
         {NBARDisplay}
       </td>
-      <td>{props.customer["NBAR Reserve"]}</td>
-      <td>{props.customer["Net Eligible"]}</td>
+      <td>${props.customer["NBAR Reserve"]}</td>
+      <td>${props.customer["Net Eligible"]}</td>
       <td>{props.customer["Concentration"]}</td>
     </tr>
   );

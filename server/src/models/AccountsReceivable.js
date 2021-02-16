@@ -1,14 +1,17 @@
 const Model = require("./Model");
 const uniqueFactory = require("objection-unique");
 
-const unique = uniqueFactory({
-  fields: ["customerName"],
+/* const unique = uniqueFactory({
+  fields: ["accountsReceivableId"],
   identifiers: ["accountsReceivableId"],
-});
+}); */
 
-class AccountsReceivable extends unique(Model) {
+class AccountsReceivable extends Model {
   static get tableName() {
     return "accountsReceivables";
+  }
+  static get idColumn() {
+    return "accountsReceivableId";
   }
   static get relationMappings() {
     const { Exam } = require("./index");

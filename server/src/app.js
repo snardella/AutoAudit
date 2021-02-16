@@ -29,10 +29,11 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, "../public")));
 app.use(
   bodyParser.urlencoded({
+    limit: "10mb",
     extended: true,
   })
 );
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: "10mb", extended: true }));
 addMiddlewares(app);
 app.use(rootRouter);
 app.listen(configuration.web.port, configuration.web.host, () => {

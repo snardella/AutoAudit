@@ -21,7 +21,7 @@ class Examinee extends unique(Model) {
         modelClass: Exam,
         join: {
           from: "examinees.examineeId",
-          to: "exams.examineesId",
+          to: "exams.examineeId",
         },
       },
     };
@@ -29,8 +29,11 @@ class Examinee extends unique(Model) {
   static get jsonSchema() {
     return {
       type: "object",
-      required: ["examineeName"],
-      examineeName: { type: "string" },
+      required: ["examineeName", "industryType"],
+      properties: {
+        examineeName: { type: "string" },
+        industryType: { type: "string" },
+      },
     };
   }
 }
