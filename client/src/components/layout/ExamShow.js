@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import CustomerItem from "../layout/CustomerItem.js";
+import PostedCustomerItem from "../layout/PostedCustomerItem.js";
 import ExamTotals from "../layout/ExamTotals.js";
+import NivoBarChart from "../layout/NivoBarChart.js";
+import NivoPieChart from "../layout/NivoPieChart.js";
 
 const ExamShow = (props) => {
   const [examinee, setExaminee] = useState({
@@ -10,9 +12,7 @@ const ExamShow = (props) => {
     exams: [],
   });
   const [errors, setErrors] = useState([]);
-  const [exam, setExam] = useState({
-    examDate: "",
-  });
+  const [exam, setExam] = useState([]);
   const [accountsReceivables, setAccountsReceivables] = useState([]);
 
   const getExam = async () => {
@@ -60,14 +60,14 @@ const ExamShow = (props) => {
       Concentration: ar.customerConcentration,
       "Net Eligible": ar.customerNetEligible,
     };
-    return <CustomerItem key={ar["id"]} customer={ar} />;
+    return <PostedCustomerItem key={ar["id"]} customer={ar} />;
   });
 
   let dateDisplay = new Date(exam.examDate);
   dateDisplay = `${
     dateDisplay.getMonth() + 1
   }/${dateDisplay.getDate()}/${dateDisplay.getFullYear()}`;
-
+  debugger;
   return (
     <div className="tile-container">
       <div>
@@ -76,6 +76,12 @@ const ExamShow = (props) => {
         <Link to={`/importar/${exam.examId}`}>
           <h3>Import Accounts Receivable</h3>
         </Link>
+      </div>
+      <div className="chart">
+        <NivoPieChart examTotals={exam} />
+      </div>
+      <div className="chart">
+        <NivoBarChart ar={accountsReceivables} />
       </div>
       <div>
         <table className="stacked">
@@ -120,15 +126,10 @@ const ExamShow = (props) => {
               <th width="200">Cross Aging Reserve</th>
               <th width="200">Aged Credits</th>
               <th width="200">Aged Credits Reserve</th>
-              <th width="200">Intercompany</th>
               <th width="200">Intercompany Reserve</th>
-              <th width="200">Foreign</th>
               <th width="200">Foreign Reserve</th>
-              <th width="200">Contra</th>
               <th width="200">Contra Reserve</th>
-              <th width="200">Government</th>
               <th width="200">Government Reserve</th>
-              <th width="200">NBAR</th>
               <th width="200">NBAR Reserve</th>
               <th width="200">Net Eligible</th>
               <th width="200">Concentration Reserve</th>
