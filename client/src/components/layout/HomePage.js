@@ -10,7 +10,8 @@ const HomePage = (props) => {
   }
   return (
     <div>
-      <h1>AutoAudit</h1>;<h2>Welcome {userName}</h2>
+      <h1>AutoAudit</h1>
+      <h2>Welcome {userName}</h2>
       <Link to="/examinees">
         <h2>Examinees</h2>
       </Link>

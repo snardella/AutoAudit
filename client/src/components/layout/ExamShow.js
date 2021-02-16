@@ -77,12 +77,7 @@ const ExamShow = (props) => {
           <h3>Import Accounts Receivable</h3>
         </Link>
       </div>
-      <div className="chart">
-        <NivoPieChart examTotals={exam} />
-      </div>
-      <div className="chart">
-        <NivoBarChart ar={accountsReceivables} />
-      </div>
+
       <div>
         <table className="stacked">
           <thead id="exam-total">
@@ -137,6 +132,12 @@ const ExamShow = (props) => {
           </thead>
           <tbody>{allTheCustomers}</tbody>
         </table>
+        <div className="chart">
+          <NivoBarChart ar={accountsReceivables} />
+        </div>
+        <div className="chart">
+          <NivoPieChart examTotals={exam} />
+        </div>
       </div>
     </div>
   );
