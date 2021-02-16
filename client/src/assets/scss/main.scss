@@ -56,28 +56,47 @@
   background-color: yellowgreen;
 }
 
-.table {
-  height: 400px;
-  overflow: auto;
+body {
+  margin: 0;
+  padding: 2rem;
 }
 
-.tableFixHead {
-  overflow-y: auto;
-  height: 800px;
-}
-.tableFixHead thead th {
-  position: sticky;
-  top: 0;
-}
 table {
+  text-align: left;
+  position: relative;
   border-collapse: collapse;
-  width: 100%;
 }
 th,
 td {
-  padding: 8px 16px;
-  border: 1px solid #ccc;
+  padding: 0.25rem;
+}
+tr.red th {
+  background: red;
+  color: white;
+}
+tr.green th {
+  background: green;
+  color: white;
+}
+tr.purple th {
+  background: purple;
+  color: white;
 }
 th {
-  background: rgb(103, 248, 147);
+  background: white;
+  position: sticky;
+  top: 0;
+  box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);
+}
+
+#exam-lines {
+  background-color: rgb(186, 252, 71);
+}
+
+#exam-total {
+  background-color: darkolivegreen;
+}
+
+.chart {
+  height: 800px;
 }

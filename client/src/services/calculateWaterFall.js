@@ -26,7 +26,6 @@ const calculateWaterfall = (customerAccountsReceivables) => {
     }
     cAR["Government Reserve"] = 0;
     cAR["NBAR Reserve"] = 0;
-
     cAR["Total"] =
       cAR["Current"] + cAR["30 Days"] + cAR["60 Days"] + cAR["90 Days"] + cAR["120 Days"];
     cAR["Greater Than 90"] = cAR["90 Days"] + cAR["120 Days"];
@@ -38,6 +37,9 @@ const calculateWaterfall = (customerAccountsReceivables) => {
     }
 
     cAR["Cross Aging %"] = cAR["Greater Than 90"] / cAR["Total"];
+    if (!cAR["Cross Aging %"]) {
+      cAR["Cross Aging %"] = 0;
+    }
 
     if (cAR["Cross Aging %"] > 0.5) {
       cAR["Cross Aging Reserve"] = cAR["Net Eligible"];

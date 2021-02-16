@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Redirect } from "react-router-dom";
 import * as XLSX from "xlsx";
 
 import CustomerItem from "./CustomerItem.js";
@@ -10,6 +11,7 @@ import calculateWaterfall from "../../services/calculateWaterFall.js";
 import fieldCleaner from "../../services/fieldCleaner.js";
 import ExamTotals from "./ExamTotals.js";
 import findNBAR from "../../services/findNBAR.js";
+import translateServerErrors from "../../services/translateServerErrors.js";
 
 const AccountsReceivableImport = (props) => {
   const [customerRecords, setCustomerRecords] = useState([]);
@@ -30,6 +32,7 @@ const AccountsReceivableImport = (props) => {
     examGovernmentReserve: 0,
     examNBARReserve: 0,
   });
+  const [exam, setExam] = useState([]);
   const [addressRecords, setAddressRecords] = useState([]);
   const [accountsPayableRecords, setAccountsPayableRecords] = useState([]);
   const [keywords, setKeywords] = useState({
@@ -37,6 +40,30 @@ const AccountsReceivableImport = (props) => {
     intercompany: [],
     nbar: [],
   });
+  const [examinee, setExaminee] = useState({ examineeName: "", industryType: "" });
+  const [errors, setErrors] = useState([]);
+  const [shouldRedirect, setShouldRedirect] = useState(false);
+
+  const getExam = async () => {
+    const examId = props.match.params.examId;
+    try {
+      const response = await fetch(`/api/v1/exams/${examId}`);
+      if (!response.ok) {
+        const errorMessage = `${response.status} (${response.statusText})`;
+        const error = new Error(errorMessage);
+        throw error;
+      }
+      const body = await response.json();
+      setExaminee(body.exam.examinee);
+      setExam(body.exam);
+    } catch (error) {
+      console.error(`Error in fetch: ${error.message}`);
+    }
+  };
+
+  useEffect(() => {
+    getExam();
+  }, []);
 
   const importAccountsReceivable = (file) => {
     const promise = new Promise((resolve, reject) => {
@@ -116,6 +143,35 @@ const AccountsReceivableImport = (props) => {
     });
   };
 
+  const postAccountsReceivable = async (customerRecords, examTotals) => {
+    try {
+      const examId = exam.examId;
+      customerRecords[customerRecords.length] = examTotals;
+      const response = await fetch(`/api/v1/exams/${examId}`, {
+        method: "POST",
+        headers: new Headers({
+          "Content-Type": "application/json",
+        }),
+        body: JSON.stringify(customerRecords, examTotals),
+      });
+      if (!response.ok) {
+        if (response.status === 422) {
+          const body = await response.json();
+          const newErrors = translateServerErrors(body.errors);
+          return setErrors(newErrors);
+        } else {
+          const errorMessage = `${response.status} (${response.statusText})`;
+          const error = new Error(errorMessage);
+          throw error;
+        }
+      } else {
+        setShouldRedirect(true);
+      }
+    } catch (error) {
+      console.error(`Error in fetch: ${error.message}`);
+    }
+  };
+
   const assignAddresses = async (event) => {
     event.preventDefault();
     let customerListWithAddresses = await matchupAddresses(customerRecords, addressRecords);
@@ -157,6 +213,11 @@ const AccountsReceivableImport = (props) => {
     });
   };
 
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    postAccountsReceivable(customerRecords, examTotals);
+  };
+
   const triggerWaterfall = async (event) => {
     event.preventDefault();
     let customerListWaterfall = await calculateWaterfall(customerRecords);
@@ -172,12 +233,23 @@ const AccountsReceivableImport = (props) => {
     setCustomerRecords(customerListWithNBAR);
   };
 
+  let dateDisplay = new Date(exam.examDate);
+  dateDisplay = `${
+    dateDisplay.getMonth() + 1
+  }/${dateDisplay.getDate()}/${dateDisplay.getFullYear()}`;
+
   let allTheCustomers = customerRecords.map((customer) => {
     return <CustomerItem key={customer["id"]} customer={customer} />;
   });
 
+  if (shouldRedirect) {
+    return <Redirect to={`/exams/${exam.examId}`} />;
+  }
+
   return (
     <div>
+      <h1>Examinee Name: {examinee.examineeName}</h1>
+      <h2>Exam Date: {dateDisplay}</h2>
       <label>
         Customer A/R:
         <input
@@ -241,10 +313,37 @@ const AccountsReceivableImport = (props) => {
       </label>
       <input type="button" value="Match NBAR Keywords" onClick={assignNBAR} />
       <input type="button" value="Calculate Waterfall" onClick={triggerWaterfall} />
-      <div className="tableFixHead">
+      <div>
         <table className="stacked">
-          <thead>
+          <thead id="exam-total">
             <tr>
+              <th width="200">Net Eligible</th>
+              <th width="200">Current</th>
+              <th width="200">30 Days</th>
+              <th width="200">60 Days</th>
+              <th width="200">90 Days</th>
+              <th width="200">120 Days</th>
+              <th width="200">Total</th>
+              <th width="200">Greater than 90 Days</th>
+              <th width="200">Cross Aging Reserve</th>
+              <th width="200">Aged Credits Reserve</th>
+              <th width="200">Intercompany Reserve</th>
+              <th width="200">Foreign Reserve</th>
+              <th width="200">Contra Reserve</th>
+              <th width="200">Government Reserve</th>
+              <th width="200">NBAR Reserve</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ExamTotals examTotals={examTotals} />
+          </tbody>
+        </table>
+        <input type="button" value="Submit Accounts Receivable" onClick={handleSubmit} />
+      </div>
+      <div>
+        <table className="fixed_header">
+          <thead id="exam-lines">
+            <tr className="content">
               <th width="200">Customer Name</th>
               <th width="200">State</th>
               <th width="200">Current</th>
@@ -273,32 +372,6 @@ const AccountsReceivableImport = (props) => {
             </tr>
           </thead>
           <tbody>{allTheCustomers}</tbody>
-        </table>
-      </div>
-      <div>
-        <table className="stacked">
-          <thead>
-            <tr>
-              <th width="200">Net Eligible</th>
-              <th width="200">Current</th>
-              <th width="200">30 Days</th>
-              <th width="200">60 Days</th>
-              <th width="200">90 Days</th>
-              <th width="200">120 Days</th>
-              <th width="200">Total</th>
-              <th width="200">Greater than 90 Days</th>
-              <th width="200">Cross Aging Reserve</th>
-              <th width="200">Aged Credits Reserve</th>
-              <th width="200">Intercompany Reserve</th>
-              <th width="200">Foreign Reserve</th>
-              <th width="200">Contra Reserve</th>
-              <th width="200">Government Reserve</th>
-              <th width="200">NBAR Reserve</th>
-            </tr>
-          </thead>
-          <tbody>
-            <ExamTotals examTotals={examTotals} />
-          </tbody>
         </table>
       </div>
     </div>
