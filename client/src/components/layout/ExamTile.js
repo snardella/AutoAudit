@@ -14,18 +14,13 @@ const ExamTile = (props) => {
 
   return (
     <div className="tile-container">
-      <div>
+      <div className="exam-list">
         <Link to={`/exams/${examId}`}>
-          <div className="exam-list">
+          <div>
             <h4>{dateDisplay}</h4>
-            <input
-              type="button"
-              className="button small"
-              value="Delete"
-              onClick={deleteExamHandler}
-            />
           </div>
         </Link>
+        <input type="button" className="button small" value="Delete" onClick={deleteExamHandler} />
       </div>
     </div>
   );

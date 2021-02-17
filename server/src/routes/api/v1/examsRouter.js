@@ -21,6 +21,16 @@ examsRouter.get("/:examId", async (req, res) => {
   }
 });
 
+examsRouter.delete("/:examId", async (req, res) => {
+  const examId = req.params.examId;
+  try {
+    await Exam.query().deleteById(examId);
+    return res.status(204);
+  } catch (error) {
+    return res.status(500).json({ errors: error });
+  }
+});
+
 examsRouter.post("/", async (req, res) => {
   const { body } = req;
   const formInput = cleanUserInput(body);
