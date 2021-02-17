@@ -67,7 +67,7 @@ const ExamShow = (props) => {
   dateDisplay = `${
     dateDisplay.getMonth() + 1
   }/${dateDisplay.getDate()}/${dateDisplay.getFullYear()}`;
-  debugger;
+
   return (
     <div className="tile-container">
       <div>
