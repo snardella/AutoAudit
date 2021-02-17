@@ -23,6 +23,8 @@ examsRouter.get("/:examId", async (req, res) => {
 
 examsRouter.delete("/:examId", async (req, res) => {
   const examId = req.params.examId;
+  debugger;
+  const examineeId = req.body.examineeId;
   try {
     await Exam.query().deleteById(examId);
     return res.status(204);
