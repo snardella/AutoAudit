@@ -14,6 +14,10 @@ const ExamineeShow = (props) => {
   });
   const [errors, setErrors] = useState([]);
 
+  useEffect(() => {
+    getExaminee();
+  }, []);
+
   const getExaminee = async () => {
     const examineeId = props.match.params.examineeId;
     try {
@@ -61,12 +65,14 @@ const ExamineeShow = (props) => {
     }
   };
 
-  useEffect(() => {
-    getExaminee();
-  }, []);
+  const deleteExam = async (exam) => {
+    try {
+      const examId = 0;
+    } catch (error) {}
+  };
 
   const allTheExams = examinee.exams.map((exam) => {
-    return <ExamTile key={exam.examId} exam={exam} />;
+    return <ExamTile key={exam.examId} exam={exam} deleteExam={deleteExam} />;
   });
 
   return (
@@ -77,6 +83,7 @@ const ExamineeShow = (props) => {
         <NewExamForm examinee={examinee} postExam={postExam} />
         <ErrorList errors={errors} />
       </div>
+      <h2>Exams:</h2>
       {allTheExams}
     </div>
   );

@@ -56,6 +56,11 @@
   background-color: yellowgreen;
 }
 
+.exam-list {
+  display: flex;
+  flex-direction: row;
+}
+
 body {
   margin: 0;
   padding: 2rem;
