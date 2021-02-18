@@ -38,6 +38,7 @@ const App = (props) => {
         <Route exact path="/user-sessions/new" component={SignInForm} />
         <Route exact path="/examinees" component={ExamineesList} />
         <Route exact path="/examinees/:examineeId" component={ExamineeShow} />
+        <Route exact path="/exams" component={ExamList} />
         <Route exact path="/exams/:examId" component={ExamShow} />
         <Route exact path="/importar/:examId" component={AccountsReceivableImport} />
       </Switch>

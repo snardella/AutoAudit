@@ -5,8 +5,23 @@ const { ValidationError } = objection;
 import cleanUserInput from "../../../services/cleanUserInput.js";
 import Exam from "../../../models/Exam.js";
 import AccountsReceivable from "../../../models/AccountsReceivable.js";
+import Examinee from "../../../models/Examinee.js";
 
 const examsRouter = new express.Router();
+
+examsRouter.get("/", async (req, res) => {
+  try {
+    const exams = await Exam.query();
+    for (const exam of exams) {
+      exam.examinee = await exam.$relatedQuery("examinee");
+      exam.accountsReceivables = await exam.$relatedQuery("accountsReceivables");
+    }
+
+    return res.status(200).json({ exams: exams });
+  } catch (error) {
+    return res.status(500).json({ errors: error });
+  }
+});
 
 examsRouter.get("/:examId", async (req, res) => {
   const examId = req.params.examId;
@@ -16,7 +31,26 @@ examsRouter.get("/:examId", async (req, res) => {
     exam.accountsReceivables = await exam.$relatedQuery("accountsReceivables");
     return res.status(200).json({ exam: exam });
   } catch (error) {
-    console.log(error);
+    return res.status(500).json({ errors: error });
+  }
+});
+
+examsRouter.delete("/:examId", async (req, res) => {
+  const examId = req.params.examId;
+  const examineeId = req.body.examineeId;
+  try {
+    const examToDelete = await Exam.query().findById(examId);
+    await examToDelete.$relatedQuery("accountsReceivables").delete();
+    await Exam.query().deleteById(examId);
+    const examinee = await Examinee.query().findById(examineeId);
+    examinee.exams = await examinee.$relatedQuery("exams");
+    const exams = await Exam.query();
+    for (const exam of exams) {
+      exam.examinee = await exam.$relatedQuery("examinee");
+      exam.accountsReceivables = await exam.$relatedQuery("accountsReceivables");
+    }
+    return res.status(200).json({ exams: exams, examinee: examinee });
+  } catch (error) {
     return res.status(500).json({ errors: error });
   }
 });

@@ -56,9 +56,18 @@
   background-color: yellowgreen;
 }
 
+.list {
+  display: flex;
+  flex-direction: row;
+}
+
 body {
   margin: 0;
   padding: 2rem;
+}
+
+#update-delete-button {
+  margin-right: 10px;
 }
 
 table {

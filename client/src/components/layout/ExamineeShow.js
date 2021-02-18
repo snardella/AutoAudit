@@ -14,6 +14,10 @@ const ExamineeShow = (props) => {
   });
   const [errors, setErrors] = useState([]);
 
+  useEffect(() => {
+    getExaminee();
+  }, []);
+
   const getExaminee = async () => {
     const examineeId = props.match.params.examineeId;
     try {
@@ -61,12 +65,36 @@ const ExamineeShow = (props) => {
     }
   };
 
-  useEffect(() => {
-    getExaminee();
-  }, []);
+  const deleteExam = async (exam) => {
+    try {
+      const examId = exam.examId;
+      const response = await fetch(`/api/v1/exams/${examId}`, {
+        method: "DELETE",
+        headers: new Headers({
+          "Content-Type": "application/json",
+        }),
+        body: JSON.stringify(exam),
+      });
+      if (!response.ok) {
+        if (response.status === 422) {
+          const body = await response.json();
+          const newErrors = translateServerErrors(body.errors);
+          return setErrors(newErrors);
+        } else {
+          const errorMessage = `${response.status} (${response.statusText})`;
+          const error = new Error(errorMessage);
+          throw error;
+        }
+      }
+      const body = await response.json();
+      setExaminee(body.examinee);
+    } catch (error) {
+      console.error(`Error in fetch: ${error.message}`);
+    }
+  };
 
   const allTheExams = examinee.exams.map((exam) => {
-    return <ExamTile key={exam.examId} exam={exam} />;
+    return <ExamTile key={exam.examId} exam={exam} deleteExam={deleteExam} />;
   });
 
   return (
@@ -77,6 +105,7 @@ const ExamineeShow = (props) => {
         <NewExamForm examinee={examinee} postExam={postExam} />
         <ErrorList errors={errors} />
       </div>
+      <h2>Exams:</h2>
       {allTheExams}
     </div>
   );
