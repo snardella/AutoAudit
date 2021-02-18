@@ -45,7 +45,11 @@ examsRouter.delete("/:examId", async (req, res) => {
     const examinee = await Examinee.query().findById(examineeId);
     examinee.exams = await examinee.$relatedQuery("exams");
     const exams = await Exam.query();
-    return res.status(200).json({ examinee: examinee, exams: exams });
+    for (const exam of exams) {
+      exam.examinee = await exam.$relatedQuery("examinee");
+      exam.accountsReceivables = await exam.$relatedQuery("accountsReceivables");
+    }
+    return res.status(200).json({ exams: exams, examinee: examinee });
   } catch (error) {
     return res.status(500).json({ errors: error });
   }

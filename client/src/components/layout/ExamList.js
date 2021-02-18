@@ -44,6 +44,7 @@ const ExamList = (props) => {
         }
       }
       const body = await response.json();
+      body.exams.examinees = body.examinees;
       setExams(body.exams);
     } catch (error) {
       console.error(`Error in fetch: ${error.message}`);
