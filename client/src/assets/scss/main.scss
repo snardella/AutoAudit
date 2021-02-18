@@ -1,11 +1,21 @@
-@import "./foundation/settings";
+/* @import "./foundation/settings";
 @import "~foundation-sites/scss/foundation";
-@include foundation-everything;
+@include foundation-everything; */
 // place global css here
 *,
 *::before,
 *::after {
   box-sizing: border-box;
+}
+html {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-weight: lighter;
 }
 
 :root {
@@ -61,6 +71,12 @@
   flex-direction: row;
 }
 
+.import-page {
+  border: 2px solid #ccc;
+  font-size: 15px;
+  line-height: 4;
+}
+
 body {
   margin: 0;
   padding: 2rem;
@@ -78,6 +94,7 @@ table {
 th,
 td {
   padding: 0.25rem;
+  font-weight: lighter;
 }
 tr.red th {
   background: red;
@@ -108,4 +125,25 @@ th {
 
 .chart {
   height: 800px;
+}
+
+#root {
+  background-color: rgba(225, 223, 221, 0.2);
+}
+
+.ms-Nav {
+  background-color: white;
+}
+
+.ms-Grid-col {
+  padding-left: 0;
+  margin-left: 0;
+}
+
+.ms-Viewport {
+  margin: 0 1.5%;
+}
+
+.ms-FocusZone {
+  padding: 0;
 }

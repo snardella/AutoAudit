@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Redirect } from "react-router-dom";
 import * as XLSX from "xlsx";
+import {
+  DetailsList,
+  DetailsListLayoutMode,
+  Selection,
+  SelectionMode,
+  IColumn,
+} from "@fluentui/react";
+import { mergeStyleSets } from "office-ui-fabric-react/lib/Styling";
+import "office-ui-fabric-react/dist/css/fabric.css";
 
 import CustomerItem from "./CustomerItem.js";
 import matchupAddresses from "../../services/matchupAddresses.js";
@@ -61,9 +70,82 @@ const AccountsReceivableImport = (props) => {
     }
   };
 
+  const classNames = mergeStyleSets({
+    table: {
+      margin: "auto",
+    },
+  });
+
   useEffect(() => {
     getExam();
   }, []);
+
+  const handleColumnClick = (event, column) => {
+    let columnName = column.fieldName;
+    debugger;
+    columnData[0].isSortedDescending = !columnData[0].isSortedDescending;
+    //let sortedList = [...data];
+    let sortedList;
+    debugger;
+    if (columnData[0].isSortedDescending) {
+      sortedList = [...data].sort(ascSorter(columnName));
+    } else {
+      sortedList = [...data].sort(descSorter(columnName));
+    }
+
+    setData(sortedList);
+  };
+
+  function ascSorter(prop) {
+    return function (a, b) {
+      return a[prop] - b[prop];
+    };
+  }
+
+  function descSorter(prop) {
+    return function (a, b) {
+      return b[prop] - a[prop];
+    };
+  }
+
+  const columns = [
+    {
+      key: "column1",
+      name: "From",
+      fieldName: "from",
+      minWidth: 100,
+      maxWidth: 300,
+      isResizable: true,
+      isSortedDescending: false,
+      onColumnClick: handleColumnClick,
+    },
+    {
+      key: "column2",
+      name: "To",
+      fieldName: "to",
+      minWidth: 100,
+      maxWidth: 300,
+      isResizable: true,
+      isSortedDescending: false,
+      onColumnClick: handleColumnClick,
+    },
+    {
+      key: "column3",
+      name: "Amount",
+      fieldName: "amount",
+      minWidth: 100,
+      maxWidth: 300,
+      isResizable: true,
+    },
+    {
+      key: "column4",
+      name: "Date",
+      fieldName: "date",
+      minWidth: 100,
+      maxWidth: 300,
+      isResizable: true,
+    },
+  ];
 
   const importAccountsReceivable = (file) => {
     const promise = new Promise((resolve, reject) => {
@@ -248,71 +330,73 @@ const AccountsReceivableImport = (props) => {
 
   return (
     <div>
-      <h1>Examinee Name: {examinee.examineeName}</h1>
-      <h2>Exam Date: {dateDisplay}</h2>
-      <label>
-        Customer A/R:
-        <input
-          type="file"
-          onChange={(e) => {
-            const file = e.target.files[0];
-            importAccountsReceivable(file);
-          }}
-        />
-      </label>
-      <label>
-        Addresses:
-        <input
-          type="file"
-          onChange={(e) => {
-            const file = e.target.files[0];
-            importAddresses(file);
-          }}
-        />
-      </label>
-      <input type="button" value="Match Addresses" onClick={assignAddresses} />
-      <label>
-        Customer A/P:
-        <input
-          type="file"
-          onChange={(e) => {
-            const file = e.target.files[0];
-            importAccountsPayable(file);
-          }}
-        />
-      </label>
-      <input type="button" value="Match A/P" onClick={assignAccountsPayable} />
-      <label>
-        Government Keywords (separate by ;)
-        <textarea
-          name="government"
-          onChange={handleInputChange}
-          value={keywords.government}
-          rows="1"
-        ></textarea>
-      </label>
-      <input type="button" value="Match Government Keywords" onClick={assignGovernment} />
-      <label>
-        Intercompany Keywords (separate by ;)
-        <textarea
-          name="intercompany"
-          onChange={handleInputChange}
-          value={keywords.intercompany}
-          rows="1"
-        ></textarea>
-      </label>
-      <input type="button" value="Match Intercompany Keywords" onClick={assignIntercompany} />
-      <label>
-        NBAR Keywords (separate by ;)
-        <textarea
-          name="nbar"
-          onChange={handleInputChange}
-          value={keywords.nbar}
-          rows="1"
-        ></textarea>
-      </label>
-      <input type="button" value="Match NBAR Keywords" onClick={assignNBAR} />
-      <input type="button" value="Calculate Waterfall" onClick={triggerWaterfall} />
+      <div className="import-page">
+        <h1>Examinee Name: {examinee.examineeName}</h1>
+        <h2>Exam Date: {dateDisplay}</h2>
+        <label>
+          Customer A/R:
+          <PrimaryButton
+            type="file"
+            onChange={(e) => {
+              const file = e.target.files[0];
+              importAccountsReceivable(file);
+            }}
+          />
+        </label>
+        <label>
+          Addresses:
+          <input
+            type="file"
+            onChange={(e) => {
+              const file = e.target.files[0];
+              importAddresses(file);
+            }}
+          />
+        </label>
+        <input type="button" value="Match Addresses" onClick={assignAddresses} />
+        <label>
+          Customer A/P:
+          <input
+            type="file"
+            onChange={(e) => {
+              const file = e.target.files[0];
+              importAccountsPayable(file);
+            }}
+          />
+        </label>
+        <input type="button" value="Match A/P" onClick={assignAccountsPayable} />
+        <label>
+          Government Keywords (separate by ;)
+          <textarea
+            name="government"
+            onChange={handleInputChange}
+            value={keywords.government}
+            rows="1"
+          ></textarea>
+        </label>
+        <input type="button" value="Match Government Keywords" onClick={assignGovernment} />
+        <label>
+          Intercompany Keywords (separate by ;)
+          <textarea
+            name="intercompany"
+            onChange={handleInputChange}
+            value={keywords.intercompany}
+            rows="1"
+          ></textarea>
+        </label>
+        <input type="button" value="Match Intercompany Keywords" onClick={assignIntercompany} />
+        <label>
+          NBAR Keywords (separate by ;)
+          <textarea
+            name="nbar"
+            onChange={handleInputChange}
+            value={keywords.nbar}
+            rows="1"
+          ></textarea>
+        </label>
+        <input type="button" value="Match NBAR Keywords" onClick={assignNBAR} />
+        <input type="button" value="Calculate Waterfall" onClick={triggerWaterfall} />
+      </div>
       <div>
         <table className="stacked">
           <thead id="exam-total">
@@ -340,42 +424,50 @@ const AccountsReceivableImport = (props) => {
         </table>
         <input type="button" value="Submit Accounts Receivable" onClick={handleSubmit} />
       </div>
-      <div>
-        <table className="fixed_header">
-          <thead id="exam-lines">
-            <tr className="content">
-              <th width="200">Customer Name</th>
-              <th width="200">State</th>
-              <th width="200">Current</th>
-              <th width="200">30 Days</th>
-              <th width="200">60 Days</th>
-              <th width="200">90 Days</th>
-              <th width="200">120 Days</th>
-              <th width="200">Total</th>
-              <th width="200">Greater than 90 Days</th>
-              <th width="200">Cross Aging %</th>
-              <th width="200">Cross Aging Reserve</th>
-              <th width="200">Aged Credits</th>
-              <th width="200">Aged Credits Reserve</th>
-              <th width="200">Intercompany</th>
-              <th width="200">Intercompany Reserve</th>
-              <th width="200">Foreign</th>
-              <th width="200">Foreign Reserve</th>
-              <th width="200">Contra</th>
-              <th width="200">Contra Reserve</th>
-              <th width="200">Government</th>
-              <th width="200">Government Reserve</th>
-              <th width="200">NBAR</th>
-              <th width="200">NBAR Reserve</th>
-              <th width="200">Net Eligible</th>
-              <th width="200">Concentration Reserve</th>
-            </tr>
-          </thead>
-          <tbody>{allTheCustomers}</tbody>
-        </table>
+      <div data-is-scrollable={true}>
+        <div className={`s-Grid-col ms-sm9 ms-xl9 ${classNames.table}`}>
+          <DetailsList items={customerRecords} columns={columns} selectionMode={0} />
+        </div>
       </div>
     </div>
   );
 };
 
 export default AccountsReceivableImport;
+
+{
+  /* <div>
+<table className="fixed_header">
+  <thead id="exam-lines">
+    <tr className="content">
+      <th width="200">Customer Name</th>
+      <th width="200">State</th>
+      <th width="200">Current</th>
+      <th width="200">30 Days</th>
+      <th width="200">60 Days</th>
+      <th width="200">90 Days</th>
+      <th width="200">120 Days</th>
+      <th width="200">Total</th>
+      <th width="200">Greater than 90 Days</th>
+      <th width="200">Cross Aging %</th>
+      <th width="200">Cross Aging Reserve</th>
+      <th width="200">Aged Credits</th>
+      <th width="200">Aged Credits Reserve</th>
+      <th width="200">Intercompany</th>
+      <th width="200">Intercompany Reserve</th>
+      <th width="200">Foreign</th>
+      <th width="200">Foreign Reserve</th>
+      <th width="200">Contra</th>
+      <th width="200">Contra Reserve</th>
+      <th width="200">Government</th>
+      <th width="200">Government Reserve</th>
+      <th width="200">NBAR</th>
+      <th width="200">NBAR Reserve</th>
+      <th width="200">Net Eligible</th>
+      <th width="200">Concentration Reserve</th>
+    </tr>
+  </thead>
+  <tbody>{allTheCustomers}</tbody>
+</table>
+</div> */
+}
