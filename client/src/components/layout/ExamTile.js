@@ -3,6 +3,16 @@ import { Link } from "react-router-dom";
 
 const ExamTile = (props) => {
   const { examDate, examId, examineeId } = props.exam;
+  let examineeDisplay;
+  if (props.examinee) {
+    const { examineeName } = props.examinee;
+    examineeDisplay = `${examineeName} - `;
+  }
+
+  if (examineeDisplay == undefined) {
+    examineeDisplay = "";
+  }
+
   let dateDisplay = new Date(examDate);
   dateDisplay = `${
     dateDisplay.getMonth() + 1
@@ -14,13 +24,22 @@ const ExamTile = (props) => {
 
   return (
     <div className="tile-container">
-      <div className="exam-list">
+      <div className="list">
+        <input
+          type="button"
+          className="button small"
+          value="Delete"
+          onClick={deleteExamHandler}
+          id="update-delete-button"
+        />
         <Link to={`/exams/${examId}`}>
           <div>
-            <h4>{dateDisplay}</h4>
+            <h4>
+              {examineeDisplay}
+              {dateDisplay}
+            </h4>
           </div>
         </Link>
-        <input type="button" className="button small" value="Delete" onClick={deleteExamHandler} />
       </div>
     </div>
   );

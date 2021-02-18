@@ -73,6 +73,7 @@ const ExamineeShow = (props) => {
         headers: new Headers({
           "Content-Type": "application/json",
         }),
+        body: JSON.stringify(exam),
       });
       if (!response.ok) {
         if (response.status === 422) {
@@ -85,6 +86,8 @@ const ExamineeShow = (props) => {
           throw error;
         }
       }
+      const body = await response.json();
+      setExaminee(body.examinee);
     } catch (error) {
       console.error(`Error in fetch: ${error.message}`);
     }

@@ -9,6 +9,7 @@ const clientRoutes = [
   "/users/new",
   "/examinees",
   "/examinees/:examineeId",
+  "/exams",
   "/exams/:examId",
   "/importar/:examId",
 ];

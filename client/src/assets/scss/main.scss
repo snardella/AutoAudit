@@ -56,7 +56,7 @@
   background-color: yellowgreen;
 }
 
-.exam-list {
+.list {
   display: flex;
   flex-direction: row;
 }
@@ -64,6 +64,10 @@
 body {
   margin: 0;
   padding: 2rem;
+}
+
+#update-delete-button {
+  margin-right: 10px;
 }
 
 table {

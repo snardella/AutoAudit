@@ -44,6 +44,7 @@
     "react-dom": "~16.13",
     "react-hot-loader": "^4.12.21",
     "react-router-dom": "5.2",
+    "react-router-hash-link": "^2.4.0",
     "react-sticky-header": "^0.2.0",
     "react-trip-date": "^0.0.3",
     "redbox-react": "~1.6",

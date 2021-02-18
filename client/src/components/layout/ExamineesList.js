@@ -20,6 +20,34 @@ const ExamineesList = (props) => {
     }
   };
 
+  const deleteExaminee = async (examinee) => {
+    const examineeId = examinee.examineeId;
+    try {
+      const response = await fetch(`/api/v1/examinees/${examineeId}`, {
+        method: "DELETE",
+        headers: new Headers({
+          "Content-Type": "application/json",
+        }),
+        body: JSON.stringify(examinee),
+      });
+      if (!response.ok) {
+        if (response.status === 422) {
+          const body = await response.json();
+          const newErrors = translateServerErrors(body.errors);
+          return setErrors(newErrors);
+        } else {
+          const errorMessage = `${response.status} (${response.statusText})`;
+          const error = new Error(errorMessage);
+          throw error;
+        }
+      }
+      const body = await response.json();
+      setExaminees(body.examinees);
+    } catch (error) {
+      console.error(`Error in fetch: ${error.message}`);
+    }
+  };
+
   const postExaminee = async (newExamineeData) => {
     try {
       const response = await fetch(`/api/v1/examinees`, {
@@ -53,7 +81,9 @@ const ExamineesList = (props) => {
   }, []);
 
   const allTheExaminees = examinees.map((examinee) => {
-    return <ExamineeTile key={examinee.examineeId} examinee={examinee} />;
+    return (
+      <ExamineeTile key={examinee.examineeId} examinee={examinee} deleteExaminee={deleteExaminee} />
+    );
   });
 
   return (

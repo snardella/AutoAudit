@@ -9,7 +9,6 @@ let findNBAR = (customerList, NBARKeywordList) => {
       for (let j = 0; j < NBARKeywordListArray.length; j++) {
         if (NBARKeywordListArray[j] != "") {
           let re = new RegExp(NBARKeywordListArray[j], "i");
-          debugger;
           if (re.test(customerList[i]["State"])) {
             customerList[i]["NBAR"] = true;
           }
