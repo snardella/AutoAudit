@@ -21,6 +21,14 @@ import fieldCleaner from "../../services/fieldCleaner.js";
 import ExamTotals from "./ExamTotals.js";
 import findNBAR from "../../services/findNBAR.js";
 import translateServerErrors from "../../services/translateServerErrors.js";
+import TagsInput from "./TagsInput";
+
+const KeyCodes = {
+  comma: 188,
+  enter: 13,
+};
+
+const delimiters = [KeyCodes.comma, KeyCodes.enter];
 
 const AccountsReceivableImport = (props) => {
   const [customerRecords, setCustomerRecords] = useState([]);
@@ -52,6 +60,12 @@ const AccountsReceivableImport = (props) => {
   const [examinee, setExaminee] = useState({ examineeName: "", industryType: "" });
   const [errors, setErrors] = useState([]);
   const [shouldRedirect, setShouldRedirect] = useState(false);
+  const selectedTags = (tags) => {
+    setKeywords({
+      ...keywords,
+      [event.target.name]: tags,
+    });
+  };
 
   const getExam = async () => {
     const examId = props.match.params.examId;
@@ -82,11 +96,9 @@ const AccountsReceivableImport = (props) => {
 
   const handleColumnClick = (event, column) => {
     let columnName = column.fieldName;
-    debugger;
     columnData[0].isSortedDescending = !columnData[0].isSortedDescending;
     //let sortedList = [...data];
     let sortedList;
-    debugger;
     if (columnData[0].isSortedDescending) {
       sortedList = [...data].sort(ascSorter(columnName));
     } else {
@@ -295,6 +307,13 @@ const AccountsReceivableImport = (props) => {
     });
   };
 
+  const handleTagChange = (name, tags) => {
+    setKeywords({
+      ...keywords,
+      [name]: tags,
+    });
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
     postAccountsReceivable(customerRecords, examTotals);
@@ -329,42 +348,60 @@ const AccountsReceivableImport = (props) => {
   }
 
   return (
-    <div>
+    <div className="page">
       <div className="import-page">
-        <h1>Examinee Name: {examinee.examineeName}</h1>
-        <h2>Exam Date: {dateDisplay}</h2>
-        <label>
-          Customer A/R:
-          <PrimaryButton
-            type="file"
-            onChange={(e) => {
-              const file = e.target.files[0];
-              importAccountsReceivable(file);
-            }}
-          />
-        </label>
-        <label>
-          Addresses:
-          <input
-            type="file"
-            onChange={(e) => {
-              const file = e.target.files[0];
-              importAddresses(file);
-            }}
-          />
-        </label>
-        <input type="button" value="Match Addresses" onClick={assignAddresses} />
-        <label>
-          Customer A/P:
-          <input
-            type="file"
-            onChange={(e) => {
-              const file = e.target.files[0];
-              importAccountsPayable(file);
-            }}
-          />
-        </label>
-        <input type="button" value="Match A/P" onClick={assignAccountsPayable} />
+        <div>
+          <h2> {examinee.examineeName}</h2>
+        </div>
+        <h3>{dateDisplay}</h3>
+        <div className="in-a-row">
+          <label>
+            Customer A/R:
+            <input
+              type="file"
+              onChange={(e) => {
+                const file = e.target.files[0];
+                importAccountsReceivable(file);
+              }}
+            />
+          </label>
+
+          <label>
+            Addresses:
+            <input
+              type="file"
+              onChange={(e) => {
+                const file = e.target.files[0];
+                importAddresses(file);
+              }}
+            />
+          </label>
+
+          <label>
+            Customer A/P:
+            <input
+              type="file"
+              onChange={(e) => {
+                const file = e.target.files[0];
+                importAccountsPayable(file);
+              }}
+            />
+          </label>
+        </div>
+        <input
+          className="button small medium-only-expanded"
+          href="#"
+          type="button"
+          value="Match Addresses"
+          onClick={assignAddresses}
+        />
+        <input
+          className="button small"
+          type="button"
+          value="Match A/P"
+          onClick={assignAccountsPayable}
+        />
+
         <label>
           Government Keywords (separate by ;)
           <textarea
@@ -374,7 +411,12 @@ const AccountsReceivableImport = (props) => {
             rows="1"
           ></textarea>
         </label>
-        <input type="button" value="Match Government Keywords" onClick={assignGovernment} />
+        <input
+          type="button"
+          className="button small"
+          value="Match Government Keywords"
+          onClick={assignGovernment}
+        />
         <label>
           Intercompany Keywords (separate by ;)
           <textarea
@@ -384,7 +426,12 @@ const AccountsReceivableImport = (props) => {
             rows="1"
           ></textarea>
         </label>
-        <input type="button" value="Match Intercompany Keywords" onClick={assignIntercompany} />
+        <input
+          type="button"
+          className="button small"
+          value="Match Intercompany Keywords"
+          onClick={assignIntercompany}
+        />
         <label>
           NBAR Keywords (separate by ;)
           <textarea
@@ -394,40 +441,87 @@ const AccountsReceivableImport = (props) => {
             rows="1"
           ></textarea>
         </label>
-        <input type="button" value="Match NBAR Keywords" onClick={assignNBAR} />
-        <input type="button" value="Calculate Waterfall" onClick={triggerWaterfall} />
+        <input
+          type="button"
+          className="button small"
+          value="Match NBAR Keywords"
+          onClick={assignNBAR}
+        />
+        <input
+          type="button"
+          className="button small"
+          value="Calculate Waterfall"
+          onClick={triggerWaterfall}
+        />
       </div>
       <div>
-        <table className="stacked">
-          <thead id="exam-total">
-            <tr>
-              <th width="200">Net Eligible</th>
-              <th width="200">Current</th>
-              <th width="200">30 Days</th>
-              <th width="200">60 Days</th>
-              <th width="200">90 Days</th>
-              <th width="200">120 Days</th>
-              <th width="200">Total</th>
-              <th width="200">Greater than 90 Days</th>
-              <th width="200">Cross Aging Reserve</th>
-              <th width="200">Aged Credits Reserve</th>
-              <th width="200">Intercompany Reserve</th>
-              <th width="200">Foreign Reserve</th>
-              <th width="200">Contra Reserve</th>
-              <th width="200">Government Reserve</th>
-              <th width="200">NBAR Reserve</th>
-            </tr>
-          </thead>
-          <tbody>
-            <ExamTotals examTotals={examTotals} />
-          </tbody>
-        </table>
-        <input type="button" value="Submit Accounts Receivable" onClick={handleSubmit} />
-      </div>
-      <div data-is-scrollable={true}>
-        <div className={`s-Grid-col ms-sm9 ms-xl9 ${classNames.table}`}>
-          <DetailsList items={customerRecords} columns={columns} selectionMode={0} />
+        <div className="table-horizontal-scroll">
+          <table className="fixed_header">
+            <thead id="exam-total">
+              <tr>
+                <th width="200">Net Eligible</th>
+                <th width="200">Current</th>
+                <th width="200">30 Days</th>
+                <th width="200">60 Days</th>
+                <th width="200">90 Days</th>
+                <th width="200">120 Days</th>
+                <th width="200">Total</th>
+                <th width="200">Greater than 90 Days</th>
+                <th width="200">Cross Aging Reserve</th>
+                <th width="200">Aged Credits Reserve</th>
+                <th width="200">Intercompany Reserve</th>
+                <th width="200">Foreign Reserve</th>
+                <th width="200">Contra Reserve</th>
+                <th width="200">Government Reserve</th>
+                <th width="200">NBAR Reserve</th>
+              </tr>
+            </thead>
+            <tbody>
+              <ExamTotals examTotals={examTotals} />
+            </tbody>
+          </table>
         </div>
+        <div className="table-vertical-scroll">
+          <table className="fixed_header">
+            <thead id="exam-lines">
+              <tr className="content">
+                <th width="200">Customer Name</th>
+                <th width="200">State</th>
+                <th width="200">Current</th>
+                <th width="200">30 Days</th>
+                <th width="200">60 Days</th>
+                <th width="200">90 Days</th>
+                <th width="200">120 Days</th>
+                <th width="200">Total</th>
+                <th width="200">Greater than 90 Days</th>
+                <th width="200">Cross Aging %</th>
+                <th width="200">Cross Aging Reserve</th>
+                <th width="200">Aged Credits</th>
+                <th width="200">Aged Credits Reserve</th>
+                <th width="200">Intercompany</th>
+                <th width="200">Intercompany Reserve</th>
+                <th width="200">Foreign</th>
+                <th width="200">Foreign Reserve</th>
+                <th width="200">Contra</th>
+                <th width="200">Contra Reserve</th>
+                <th width="200">Government</th>
+                <th width="200">Government Reserve</th>
+                <th width="200">NBAR</th>
+                <th width="200">NBAR Reserve</th>
+                <th width="200">Net Eligible</th>
+                <th width="200">Concentration Reserve</th>
+              </tr>
+            </thead>
+            <tbody>{allTheCustomers}</tbody>
+          </table>
+        </div>
+
+        <input
+          type="button"
+          className="button small"
+          value="Submit Accounts Receivable"
+          onClick={handleSubmit}
+        />
       </div>
     </div>
   );
@@ -436,38 +530,9 @@ const AccountsReceivableImport = (props) => {
 export default AccountsReceivableImport;
 
 {
-  /* <div>
-<table className="fixed_header">
-  <thead id="exam-lines">
-    <tr className="content">
-      <th width="200">Customer Name</th>
-      <th width="200">State</th>
-      <th width="200">Current</th>
-      <th width="200">30 Days</th>
-      <th width="200">60 Days</th>
-      <th width="200">90 Days</th>
-      <th width="200">120 Days</th>
-      <th width="200">Total</th>
-      <th width="200">Greater than 90 Days</th>
-      <th width="200">Cross Aging %</th>
-      <th width="200">Cross Aging Reserve</th>
-      <th width="200">Aged Credits</th>
-      <th width="200">Aged Credits Reserve</th>
-      <th width="200">Intercompany</th>
-      <th width="200">Intercompany Reserve</th>
-      <th width="200">Foreign</th>
-      <th width="200">Foreign Reserve</th>
-      <th width="200">Contra</th>
-      <th width="200">Contra Reserve</th>
-      <th width="200">Government</th>
-      <th width="200">Government Reserve</th>
-      <th width="200">NBAR</th>
-      <th width="200">NBAR Reserve</th>
-      <th width="200">Net Eligible</th>
-      <th width="200">Concentration Reserve</th>
-    </tr>
-  </thead>
-  <tbody>{allTheCustomers}</tbody>
-</table>
-</div> */
+  /* <div data-is-scrollable={true}>
+        <div className={`s-Grid-col ms-sm9 ms-xl9 ${classNames.table}`}>
+          <DetailsList items={customerRecords} columns={columns} selectionMode={0} />
+        </div>
+      </div> */
 }

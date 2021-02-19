@@ -87,10 +87,17 @@ const ExamineesList = (props) => {
   });
 
   return (
-    <div>
-      <h1>Examinees</h1>
-      <NewExamineeForm postExaminee={postExaminee} />
-      {allTheExaminees}
+    <div className="page">
+      <h2>Examinees</h2>
+      {examinees.length != 0 && <div>{allTheExaminees}</div>}
+      {examinees.length == 0 && (
+        <div>
+          <h3>No Examinees</h3>
+        </div>
+      )}
+      <div className="add-examinee">
+        <NewExamineeForm postExaminee={postExaminee} />
+      </div>
     </div>
   );
 };

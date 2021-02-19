@@ -15,8 +15,8 @@ import ExamineesList from "./layout/ExamineesList.js";
 import ExamineeShow from "./layout/ExamineeShow.js";
 import ExamShow from "./layout/ExamShow.js";
 import Navigation from "./layout/Navigation.js";
-import CardsSection from "./layout/CardsSection.js";
 import OperationsTable from "./layout/OperationsTable";
+import CardsSection from "./layout/CardsSection";
 
 const App = (props) => {
   const [currentUser, setCurrentUser] = useState(undefined);
@@ -29,7 +29,7 @@ const App = (props) => {
         setCurrentUser(null);
       });
   }, []);
-  //<TopBar user={currentUser} />
+  //
   // <Route exact path="/">
   // <HomePage user={currentUser} />/
   //</Route>
@@ -38,6 +38,7 @@ const App = (props) => {
   return (
     <Router>
       <div className="ms-Grid" dir="ltr">
+        <TopBar user={currentUser} />
         <div className="ms-Grid-row">
           <div className="ms-Grid-col ms-sm1 ms-xl1">
             <Navigation user={currentUser} />
@@ -52,6 +53,7 @@ const App = (props) => {
                 <Route exact path="/exams" component={ExamList} />
                 <Route exact path="/exams/:examId" component={ExamShow} />
                 <Route exact path="/importar/:examId" component={AccountsReceivableImport} />
+                <Route exact path="/" component={HomePage} />
               </Switch>
             </div>
             <div className="ms-Grid-row"></div>

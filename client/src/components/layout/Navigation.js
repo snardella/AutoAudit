@@ -39,29 +39,15 @@ const Navigation = (props) => {
       {
         links: [
           {
-            name: "Login",
-            key: "key1",
-            url: "/user-sessions/new",
-            iconProps: {
-              iconName: "FollowUser",
-              styles: {
-                root: {
-                  fontSize: 20,
-                  color: "#106ebe",
-                },
-              },
-            },
-          },
-          {
-            name: "Sign Up",
+            name: "Dashboard",
             key: "key2",
-            url: "/users/new",
+            url: "/",
             iconProps: {
-              iconName: "Add",
+              iconName: "BIDashboard",
               styles: {
                 root: {
                   fontSize: 20,
-                  color: "#106ebe",
+                  color: "#00a8e8",
                 },
               },
             },
@@ -74,20 +60,6 @@ const Navigation = (props) => {
       {
         links: [
           {
-            name: "Logout",
-            key: "key1",
-            url: "/",
-            iconProps: {
-              iconName: "CalculatorSubtract",
-              styles: {
-                root: {
-                  fontSize: 20,
-                  color: "#106ebe",
-                },
-              },
-            },
-          },
-          {
             name: "Dashboard",
             key: "key2",
             url: "/",
@@ -96,7 +68,7 @@ const Navigation = (props) => {
               styles: {
                 root: {
                   fontSize: 20,
-                  color: "#106ebe",
+                  color: "#00a8e8",
                 },
               },
             },
@@ -104,13 +76,13 @@ const Navigation = (props) => {
           {
             name: "Examinees",
             key: "key3",
-            url: "/",
+            url: "/examinees",
             iconProps: {
               iconName: "CompanyDirectory",
               styles: {
                 root: {
                   fontSize: 20,
-                  color: "#106ebe",
+                  color: "#00a8e8",
                 },
               },
             },
@@ -124,7 +96,7 @@ const Navigation = (props) => {
               styles: {
                 root: {
                   fontSize: 20,
-                  color: "#106ebe",
+                  color: "#00a8e8",
                 },
               },
             },

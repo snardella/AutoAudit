@@ -12,6 +12,7 @@ const clientRoutes = [
   "/exams",
   "/exams/:examId",
   "/importar/:examId",
+  "/logout",
 ];
 
 router.get(clientRoutes, (req, res) => {
