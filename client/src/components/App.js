@@ -29,21 +29,16 @@ const App = (props) => {
         setCurrentUser(null);
       });
   }, []);
-  //
-  // <Route exact path="/">
-  // <HomePage user={currentUser} />/
-  //</Route>
-  //<CardsSection />
-  // <OperationsTable />
+
   return (
     <Router>
       <div className="ms-Grid" dir="ltr">
         <TopBar user={currentUser} />
         <div className="ms-Grid-row">
-          <div className="ms-Grid-col ms-sm1 ms-xl1">
+          <div className="ms-Grid-col ms-sm2 ms-xl2">
             <Navigation user={currentUser} />
           </div>
-          <div className="main-element ms-Grid-col ms-sm11 ms-xl11">
+          <div className="main-element ms-Grid-col ms-sm10 ms-xl10">
             <div className="ms-Grid-row">
               <Switch>
                 <Route exact path="/users/new" component={RegistrationForm} />
