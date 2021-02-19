@@ -33,7 +33,7 @@ const NewExamineeForm = (props) => {
 
   return (
     <div className="callout">
-      <h2>Add Examinee</h2>
+      <h3>Add Examinee</h3>
       <form onSubmit={handleSubmit}>
         <div className="row">
           <label className="medium-6 columns">

@@ -102,9 +102,13 @@ const ExamineeShow = (props) => {
       <div className="tile-container">
         <h2>{examinee.examineeName}</h2>
         <h3>{examinee.industryType}</h3>
+        <div>
+          <NewExamForm examinee={examinee} postExam={postExam} />
+          <ErrorList errors={errors} />
+        </div>
         {examinee.exams.length != 0 && (
           <div>
-            <h3>Exams:</h3>
+            <h3>Exams</h3>
             {allTheExams}
           </div>
         )}
@@ -113,10 +117,6 @@ const ExamineeShow = (props) => {
             <h4>No Exams</h4>
           </div>
         )}
-        <div>
-          <NewExamForm examinee={examinee} postExam={postExam} />
-          <ErrorList errors={errors} />
-        </div>
       </div>
     </div>
   );

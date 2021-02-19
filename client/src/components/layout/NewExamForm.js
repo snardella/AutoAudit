@@ -31,7 +31,7 @@ const NewExamForm = (props) => {
   };
   return (
     <div className="callout">
-      <h2>Add Exam</h2>
+      <h3>Add Exam</h3>
       <form onSubmit={handleSubmit}>
         <div className="row">
           <label className="medium-6 columns">

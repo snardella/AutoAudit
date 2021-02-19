@@ -105,7 +105,7 @@ const Navigation = (props) => {
       },
     ];
   }
-  return <Nav groups={links} selectedKey="key1" styles={navigationStyles} />;
+  return <Nav groups={links} styles={navigationStyles} />;
 };
 
 export default Navigation;

@@ -18,9 +18,14 @@ html {
 h1,
 h2,
 h3,
-h4 {
+h4,
+h5 {
   font-weight: 300;
   color: #00a8e8;
+}
+
+h5 {
+  color: #003459;
 }
 
 h2 {
@@ -54,44 +59,44 @@ label {
 .government,
 .government:nth-of-type(even),
 .government:nth-of-type(odd) {
-  background-color: rgb(74, 125, 165);
+  background-color: #0264b4;
   font-weight: bolder;
 }
 
 .intercompany,
 .intercompany:nth-of-type(even),
 .intercompany:nth-of-type(odd) {
-  background-color: rgb(146, 255, 109);
+  background-color: #f0c954;
   font-weight: bolder;
 }
 
 .foreign,
 .foreign:nth-of-type(even),
 .foreign:nth-of-type(odd) {
-  background-color: rgb(255, 245, 109);
+  background-color: #7bdeff;
   font-weight: bolder;
 }
 
 .nbar,
 .nbar:nth-of-type(even),
 .nbar:nth-of-type(odd) {
-  background-color: rgb(226, 10, 10);
+  background-color: #22d674;
   font-weight: bolder;
 }
 
 .contra,
 .contra:nth-of-type(even),
 .contra:nth-of-type(odd) {
-  background-color: rgba(255, 7, 205, 0.783);
+  background-color: #cf1b45;
   font-weight: bolder;
 }
 
 .warning {
-  background-color: rgb(255, 174, 0);
+  background-color: #f07b54;
 }
 
 .pop-up {
-  background-color: yellowgreen;
+  background-color: #ff82c1;
 }
 
 .list {
@@ -151,8 +156,7 @@ textarea {
 }
 
 .callout {
-  width: 300px;
-  margin-top: 100px;
+  width: 500px;
 }
 
 .small {
@@ -197,6 +201,12 @@ textarea {
 
 .chart {
   height: 800px;
+}
+
+.small-chart {
+  height: 400px;
+  width: 100%;
+  margin-bottom: 40px;
 }
 
 #root {
