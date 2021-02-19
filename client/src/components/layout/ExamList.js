@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import ExamTile from "../layout/ExamTile.js";
 import NivoBarChart from "../layout/NivoBarChart.js";
 import NivoPieChart from "../layout/NivoPieChart.js";
+import { HashLink } from "react-router-hash-link";
 
 const ExamList = (props) => {
   const [exams, setExams] = useState([]);
@@ -77,12 +78,22 @@ const ExamList = (props) => {
     );
   });
   return (
-    <div>
-      <h1>Exam List</h1>
-      {allTheExams}
-      <div className="chart">
-        <NivoPieChart examTotals={examTotals} />
-      </div>
+    <div className="page">
+      <h2>Exam List</h2>
+      {exams.length != 0 && (
+        <div>
+          <h3>
+            <HashLink smooth to="#charts">
+              Goto Charts
+            </HashLink>
+          </h3>
+          {allTheExams}
+          <div className="chart" id="charts">
+            <NivoPieChart examTotals={examTotals} />
+          </div>
+        </div>
+      )}
+      {exams.length == 0 && <h3>No Exams</h3>}
     </div>
   );
 };

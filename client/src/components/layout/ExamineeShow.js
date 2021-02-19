@@ -98,15 +98,26 @@ const ExamineeShow = (props) => {
   });
 
   return (
-    <div className="tile-container">
-      <h1>{examinee.examineeName}</h1>
-      <h2>{examinee.industryType}</h2>
-      <div>
-        <NewExamForm examinee={examinee} postExam={postExam} />
-        <ErrorList errors={errors} />
+    <div className="page">
+      <div className="tile-container">
+        <h2>{examinee.examineeName}</h2>
+        <h3>{examinee.industryType}</h3>
+        {examinee.exams.length != 0 && (
+          <div>
+            <h3>Exams:</h3>
+            {allTheExams}
+          </div>
+        )}
+        {examinee.exams.length == 0 && (
+          <div>
+            <h4>No Exams</h4>
+          </div>
+        )}
+        <div>
+          <NewExamForm examinee={examinee} postExam={postExam} />
+          <ErrorList errors={errors} />
+        </div>
       </div>
-      <h2>Exams:</h2>
-      {allTheExams}
     </div>
   );
 };

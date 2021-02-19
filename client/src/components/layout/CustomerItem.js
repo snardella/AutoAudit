@@ -87,7 +87,7 @@ const CustomerItem = (props) => {
 
   return (
     <tr className={classNameColor}>
-      <td>{props.customer["Customer Name"]}</td>
+      <td className="fixed-column">{props.customer["Customer Name"]}</td>
       <td
         onMouseEnter={(event) =>
           setIsShown({

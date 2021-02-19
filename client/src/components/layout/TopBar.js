@@ -23,12 +23,7 @@ const TopBar = ({ user }) => {
   return (
     <div className="top-bar">
       <div className="top-bar-left">
-        <ul className="menu">
-          <li className="menu-text">App</li>
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-        </ul>
+        <h1>AutoAudit</h1>
       </div>
       <div className="top-bar-right">
         <ul className="menu">{user ? authenticatedListItems : unauthenticatedListItems}</ul>
