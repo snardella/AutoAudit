@@ -77,7 +77,7 @@ const ExamShow = (props) => {
           <h3>{dateDisplay}</h3>
           {accountsReceivables.length == 0 && (
             <Link to={`/importar/${exam.examId}`}>
-              <input class="button import-button" value="Import Accounts Receivable" />
+              <input className="button import-button" defaultValue="Import Accounts Receivable" />
             </Link>
           )}
         </div>

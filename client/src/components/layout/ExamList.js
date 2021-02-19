@@ -18,6 +18,9 @@ const ExamList = (props) => {
       }
       const body = await response.json();
       setExams(body.exams);
+      body.exams.forEach((exam) => {
+        setAccountsReceivables([...accountsReceivables], exam.accountsReceivables);
+      });
     } catch (error) {
       console.error(`Error in fetch: ${error.message}`);
     }
@@ -74,21 +77,29 @@ const ExamList = (props) => {
 
   const allTheExams = exams.map((exam) => {
     return (
-      <ExamTile key={exam.examId} exam={exam} deleteExam={deleteExam} examinee={exam.examinee} />
+      <div>
+        <ExamTile key={exam.examId} exam={exam} deleteExam={deleteExam} examinee={exam.examinee} />
+        {exam.accountsReceivables.length != 0 && (
+          <div className="small-chart">
+            <h4 className="centered-text">{`Accounts Receivables for ${exam.examinee.examineeName}`}</h4>
+            <NivoBarChart key={exam.examId} ar={exam.accountsReceivables} />
+          </div>
+        )}
+        {exam.accountsReceivables.length == 0 && (
+          <div>
+            <h5>No Exam Data</h5>
+          </div>
+        )}
+      </div>
     );
   });
   return (
     <div className="page">
-      <h2>Exam List</h2>
       {exams.length != 0 && (
         <div>
-          <h4>
-            <HashLink smooth to="#charts">
-              Goto Charts
-            </HashLink>
-          </h4>
           {allTheExams}
           <div className="chart" id="charts">
+            <h3 className="centered-text">Totals for All Exams</h3>
             <NivoPieChart examTotals={examTotals} />
           </div>
         </div>

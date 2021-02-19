@@ -90,18 +90,28 @@ const ExamList = (props) => {
 
   const allTheExams = exams.map((exam) => {
     return (
-      <ExamTile key={exam.examId} exam={exam} deleteExam={deleteExam} examinee={exam.examinee} />
+      <div key={exam.examId}>
+        <ExamTile key={exam.examId} exam={exam} deleteExam={deleteExam} examinee={exam.examinee} />
+        {exam.accountsReceivables.length != 0 && (
+          <div>
+            <div className="small-chart">
+              <h4 className="centered-text">{`Accounts Receivables for ${exam.examinee.examineeName}`}</h4>
+              <NivoBarChart key={exam.examId} ar={exam.accountsReceivables} />
+            </div>
+          </div>
+        )}
+      </div>
     );
   });
   return (
     <div className="page">
-      <h2>Dashboard</h2>
       {exams.length != 0 && (
         <div>
           <h3 className="centered-text">Accounts Receivables Overview</h3>
           <div className="chart" id="charts">
             <NivoBarChart ar={accountsReceivables} />
           </div>
+          {allTheExams}
           <h3 className="centered-text">Exam Totals Overview</h3>
           <div className="chart dashboard-exams" id="charts">
             <NivoPieChart examTotals={examTotals} />
