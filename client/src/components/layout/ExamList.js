@@ -82,11 +82,11 @@ const ExamList = (props) => {
       <h2>Exam List</h2>
       {exams.length != 0 && (
         <div>
-          <h3>
+          <h4>
             <HashLink smooth to="#charts">
               Goto Charts
             </HashLink>
-          </h3>
+          </h4>
           {allTheExams}
           <div className="chart" id="charts">
             <NivoPieChart examTotals={examTotals} />

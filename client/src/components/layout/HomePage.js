@@ -23,6 +23,21 @@ const ExamList = (props) => {
     }
   };
 
+  const getAccountsReceivables = async () => {
+    try {
+      const response = await fetch("/api/v1/accountsreceivables");
+      if (!response.ok) {
+        const errorMessage = `${response.status} (${response.statusText})`;
+        const error = new Error(errorMessage);
+        throw error;
+      }
+      const body = await response.json();
+      setAccountsReceivables(body.accountsReceivables);
+    } catch (error) {
+      console.error(`Error in fetch: ${error.message}`);
+    }
+  };
+
   const deleteExam = async (exam) => {
     try {
       const examId = exam.examId;
@@ -54,6 +69,7 @@ const ExamList = (props) => {
 
   useEffect(() => {
     getExams();
+    getAccountsReceivables();
   }, []);
 
   let examTotals = {
@@ -79,10 +95,14 @@ const ExamList = (props) => {
   });
   return (
     <div className="page">
-      <h2>Audit Dashboard</h2>
+      <h2>Dashboard</h2>
       {exams.length != 0 && (
         <div>
-          <div className="dashboard-exams">{allTheExams}</div>
+          <h3 className="centered-text">Accounts Receivables Overview</h3>
+          <div className="chart" id="charts">
+            <NivoBarChart ar={accountsReceivables} />
+          </div>
+          <h3 className="centered-text">Exam Totals Overview</h3>
           <div className="chart dashboard-exams" id="charts">
             <NivoPieChart examTotals={examTotals} />
           </div>

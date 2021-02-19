@@ -41,9 +41,14 @@ label {
   tab-size: 4;
 }
 
+.centered-text {
+  text-align: center;
+  color: #003459;
+}
+
 .top-bar {
   border-bottom: solid #003459;
-  text-align: center;
+  //text-align: center;
 }
 
 .government,
