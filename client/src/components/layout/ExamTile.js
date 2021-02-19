@@ -14,9 +14,10 @@ const ExamTile = (props) => {
   }
 
   let dateDisplay = new Date(examDate);
-  dateDisplay = `${
-    dateDisplay.getMonth() + 1
-  }/${dateDisplay.getDate()}/${dateDisplay.getFullYear()}`;
+  dateDisplay = `${dateDisplay.getMonth() + 1}/${dateDisplay
+    .getDate()
+    .toString()
+    .padStart(2, 0)}/${dateDisplay.getFullYear()}`;
 
   const deleteExamHandler = async () => {
     await props.deleteExam(props.exam);
