@@ -2,6 +2,8 @@
 @import "~foundation-sites/scss/foundation";
 @include foundation-everything;
 
+@import url("https://static2.sharepointonline.com/files/fabric/office-ui-fabric-core/11.0.0/css/fabric.min.css");
+
 *,
 *::before,
 *::after {
@@ -201,6 +203,7 @@ textarea {
   border-radius: 10px;
   height: 2000px;
   margin-left: 6px;
+  padding-right: 10px;
 }
 
 a {
