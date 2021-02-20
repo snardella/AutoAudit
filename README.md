@@ -6,4 +6,6 @@ to create an exam that outputs the examinee's actual worth.
 
 AutoAudit generates and visualizes an Accounts Receivable audit for examinees. By using SheetJs, RegEx, and fuzzyset.js hundreds of accounts receivables can be identified as foreign, governmental, inter-company or expired and thus eliminated from an examinee's total Accounts Receivables. The data is then persisted to a PostgreSQL database backend and presented to the user using a Fluent UI frontend along with NIVO visualization tools.
 
+Sign up and create an account to view all the features.
+
 You can view AutoAudit in action at https://autoauditapp.herokuapp.com/
