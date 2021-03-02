@@ -52,6 +52,34 @@ const Navigation = (props) => {
               },
             },
           },
+          {
+            name: "Examinees",
+            key: "key3",
+            url: "/examinees",
+            iconProps: {
+              iconName: "CompanyDirectory",
+              styles: {
+                root: {
+                  fontSize: 20,
+                  color: "#00a8e8",
+                },
+              },
+            },
+          },
+          {
+            name: "Exams",
+            key: "key4",
+            url: "/exams",
+            iconProps: {
+              iconName: "TestBeakerSolid",
+              styles: {
+                root: {
+                  fontSize: 20,
+                  color: "#00a8e8",
+                },
+              },
+            },
+          },
         ],
       },
     ];
