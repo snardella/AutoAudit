@@ -5,6 +5,7 @@ import ExamTotals from "../layout/ExamTotals.js";
 import NivoBarChart from "../layout/NivoBarChart.js";
 import NivoPieChart from "../layout/NivoPieChart.js";
 import { HashLink } from "react-router-hash-link";
+import * as XLSX from "xlsx";
 
 const ExamShow = (props) => {
   const [examinee, setExaminee] = useState({
@@ -69,6 +70,17 @@ const ExamShow = (props) => {
     dateDisplay.getMonth() + 1
   }/${dateDisplay.getDate()}/${dateDisplay.getFullYear()}`;
 
+  let wb = XLSX.utils.table_to_book(document.getElementById("mytable"), { sheet: "Sheet JS" });
+  function s2ab(s) {
+    var buf = new ArrayBuffer(s.length);
+    var view = new Uint8Array(buf);
+    for (var i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xff;
+    return buf;
+  }
+  $("#button-a").click(function () {
+    saveAs(new Blob([s2ab(wbout)], { type: "application/octet-stream" }), "test.xlsx");
+  });
+
   return (
     <div className="page">
       <div className="tile-container" id="top">
@@ -91,7 +103,7 @@ const ExamShow = (props) => {
             <div>
               <h3>Exam Totals</h3>
               <div className="table-horizontal-scroll">
-                <table className="stacked">
+                <table className="stacked" id="mytable">
                   <thead id="exam-total">
                     <tr>
                       <th width="200">Net Eligible</th>
@@ -120,7 +132,7 @@ const ExamShow = (props) => {
             <div>
               <h3>Accounts Receivables</h3>
               <div className="table-vertical-scroll">
-                <table className="fixed_header">
+                <table className="fixed_header" id="mytable2">
                   <thead id="exam-lines">
                     <tr className="content">
                       <th width="200">Customer Name</th>
